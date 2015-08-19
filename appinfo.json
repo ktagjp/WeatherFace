@@ -1,0 +1,76 @@
+{
+  "uuid": "24dc18f4-19a2-4800-a7b0-abec28e4d163",
+  "shortName": "Weather My Way",
+  "longName": "Weather My Way",
+  "companyName": "Jared Biehler",
+  "versionCode": 7,
+  "versionLabel": "1.2",
+  "capabilities": [ "configurable", "location" ],
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "temperature": 0,
+    "condition": 1,
+    "sunrise": 2,
+    "sunset": 3,
+    "pubdate": 4,
+    "error": 5,
+    "service": 6,
+    "locale": 7,
+    "debug": 8,
+    "js_ready": 9,
+    "scale": 10,
+    "battery": 11,
+    "tzoffset": 12,
+    "h1_temp": 13,
+    "h1_cond": 14,
+    "h1_time": 15,
+    "h1_pop": 16,
+    "h2_temp": 17,
+    "h2_cond": 18,
+    "h2_time": 19,
+    "h2_pop": 20,
+    "hourly_enabled": 21
+  },
+  "resources": {
+    "media": [
+      {
+        "type": "png",
+        "name": "ICON_45X45",
+        "file": "images/45x45.png"
+      },
+      {
+        "type": "png",
+        "name": "ICON_30X30",
+        "file": "images/30x30.png"
+      },
+      {
+        "type": "font",
+        "name": "FUTURA_CONDENSED_53",
+        "file": "fonts/futura_condensed_bold-webfont.ttf"
+      },
+      {
+        "name": "FUTURA_17",
+        "trackingAdjust": -2,
+        "characterRegex": "[0-9\u00b0 -]",
+        "file": "fonts/futura.ttf",
+        "type": "font"
+      },
+      {
+        "name": "FUTURA_18",
+        "trackingAdjust": 3,
+        "characterRegex": "[A-Za-z0-9 ]",
+        "file": "fonts/futura.ttf",
+        "type": "font"
+      },
+      {
+        "name": "FUTURA_30",
+        "trackingAdjust": -3,
+        "characterRegex": "[0-9\u00b0 -]",
+        "file": "fonts/futura.ttf",
+        "type": "font"
+      }
+    ]
+  }
+}
