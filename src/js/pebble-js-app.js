@@ -1,13 +1,13 @@
 var SERVICE_OPEN_WEATHER  = "open";
 var SERVICE_YAHOO_WEATHER = "yahoo";
 var EXTERNAL_DEBUG_URL    = '';
-var CONFIGURATION_URL     = 'http://jaredbiehler.github.io/weather-my-way/config/';
+var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/';    //////// Change URL to my Github page //////
 
 var Global = {
   externalDebug:     false, // POST logs to external server - dangerous! lat lon recorded
   wuApiKey:          null, // register for a free api key!
   hourlyIndex1:      2, // 3 Hours from now 
-  hourlyIndex2:      8, // 9 hours from now
+  hourlyIndex2:      5, // 6 hours from now                                  //////// Change to 5 from 8 ////////
   updateInProgress:  false,
   updateWaitTimeout: 1 * 60 * 1000, // one minute in ms
   lastUpdateAttempt: new Date(),

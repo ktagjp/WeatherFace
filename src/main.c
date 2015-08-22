@@ -84,7 +84,7 @@ static void init(void)
 
   window = window_create();
   window_stack_push(window, true /* Animated */);
-  window_set_background_color(window, GColorBlack);
+  window_set_background_color(window, GColorDukeBlue);                ///////// Change Color to GColorDukeBlue from GColorBlack for Watchface Upper Color ///////
 
   weather_data = malloc(sizeof(WeatherData));
   init_network(weather_data);
