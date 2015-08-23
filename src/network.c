@@ -6,9 +6,6 @@
 #include "main.h"
 #include "persist.h"
 
-// for temporary use
-#define TIMEZONE_DIFF 32400
-
 const  int MAX_RETRY = 2;
 static int retry_count = 0;
 
