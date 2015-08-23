@@ -273,7 +273,8 @@ void weather_layer_update(WeatherData *weather_data)
     weather_layer_set_temperature(weather_data->temperature, stale);
 
     // Day/night check
-    time_t utc = current_time + weather_data->tzoffset;
+    time_t utc = current_time;
+//    time_t utc = current_time + weather_data->tzoffset;                                ///////// Change utc value to current_time for SDK3 by ktagjp
     bool night_time = is_night_time(weather_data->sunrise, weather_data->sunset, utc);
 
     /*
@@ -289,13 +290,18 @@ void weather_layer_update(WeatherData *weather_data)
     }
 
     if (weather_data->hourly_updated != 0 && weather_data->hourly_enabled) {
+      time_t h1t = weather_data->h1_time;
+      time_t h2t = weather_data->h2_time;
+//      time_t h1t = weather_data->h1_time - weather_data->tzoffset;      ///////// Change time value for SDK3 by ktagjp
+//      time_t h2t = weather_data->h2_time - weather_data->tzoffset;      ///////// Change time value for SDK3 by ktagjp
+      strftime(time_h1, sizeof(time_h1), "%I%p", localtime(&h1t));
+      strftime(time_h2, sizeof(time_h2), "%I%p", localtime(&h2t));
 
-      time_t h1t = weather_data->h1_time - weather_data->tzoffset;
-      time_t h2t = weather_data->h2_time - weather_data->tzoffset;
-      strftime(time_h1, sizeof(time_h1), "%I%p", gmtime(&h1t));      ///////// Change function to gmtime() from localtime() for SDK3 by ktagjp
-      strftime(time_h2, sizeof(time_h2), "%I%p", gmtime(&h2t));      ///////// Change function to gmtime() from localtime() for SDK3 by ktagjp
-//      strftime(time_h1, sizeof(time_h1), "%I%p", localtime(&h1t));
-//      strftime(time_h2, sizeof(time_h2), "%I%p", localtime(&h2t));
+APP_LOG(APP_LOG_LEVEL_DEBUG, "FUNC:weather_layer_update() weather_data->h1_time  %d", weather_data->h1_time);
+APP_LOG(APP_LOG_LEVEL_DEBUG, "FUNC:weather_layer_update() weather_data->h2_time  %d", weather_data->h2_time);
+APP_LOG(APP_LOG_LEVEL_DEBUG, "FUNC:weather_layer_update() weather_data->tzoffset %d", weather_data->tzoffset);
+APP_LOG(APP_LOG_LEVEL_DEBUG, "FUNC:weather_layer_update() h1t                    %ld", h1t);
+APP_LOG(APP_LOG_LEVEL_DEBUG, "FUNC:weather_layer_update() h2t                    %ld", h2t);
 
       if (time_h1[0] == '0') {
         memmove(time_h1, &time_h1[1], sizeof(time_h1) - 1);

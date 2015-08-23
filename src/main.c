@@ -1,5 +1,6 @@
 #include <pebble.h>
 #include "main.h"
+#include "bluetooth.h"
 #include "network.h"
 #include "persist.h"
 #include "weather_layer.h"
@@ -98,6 +99,10 @@ static void init(void)
 
   load_persisted_values(weather_data);
 
+  // Setup Bluetooth connection vibration
+  UpdateConnection(bluetooth_connection_service_peek());        //////////// Add to Vibrate on Bluetooth connection / disconnection 
+	bluetooth_connection_service_subscribe(UpdateConnection);     //////////// Add to Vibrate on Bluetooth connection / disconnection 
+
   // Kickoff our weather loading 'dot' animation
   weather_animate(weather_data);
 
@@ -127,6 +132,8 @@ static void deinit(void)
   weather_layer_destroy();
   debug_layer_destroy();
   battery_layer_destroy();
+
+	bluetooth_connection_service_unsubscribe();               //////////// Add to Vibrate on Bluetooth connection / disconnection 
 
   free(weather_data);
 
