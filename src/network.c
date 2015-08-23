@@ -6,6 +6,9 @@
 #include "main.h"
 #include "persist.h"
 
+// for temporary use
+#define TIMEZONE_DIFF 32400
+
 const  int MAX_RETRY = 2;
 static int retry_count = 0;
 
@@ -53,7 +56,8 @@ static void appmsg_in_received(DictionaryIterator *received, void *context) {
     weather->sunset      = sunset_tuple->value->int32;
     weather->error       = WEATHER_E_OK;
     weather->tzoffset    = tzoffset_tuple->value->int32;
-    weather->updated     = time(NULL);
+
+    weather->updated = time(NULL);
 
     strncpy(weather->pub_date, pub_date_tuple->value->cstring, 6);
     strncpy(weather->locale, locale_tuple->value->cstring, 255);
@@ -96,13 +100,18 @@ static void appmsg_in_received(DictionaryIterator *received, void *context) {
   }
   // Hourly Weather Update
   else if (h1_temp_tuple) {
+    
     weather->h1_temp = h1_temp_tuple->value->int32;
     weather->h1_cond = h1_cond_tuple->value->int32;
-    weather->h1_time = h1_time_tuple->value->int32;
+    time_t h1_time   = h1_time_tuple->value->int32;
+    struct tm *h1_tm = localtime(&h1_time);
+    weather->h1_time = mktime(h1_tm);
     weather->h1_pop  = h1_pop_tuple->value->int32;
     weather->h2_temp = h2_temp_tuple->value->int32;
     weather->h2_cond = h2_cond_tuple->value->int32;
-    weather->h2_time = h2_time_tuple->value->int32;
+    time_t h2_time = h2_time_tuple->value->int32;
+    struct tm *h2_tm = localtime(&h2_time);
+    weather->h2_time = mktime(h2_tm);
     weather->h2_pop  = h2_pop_tuple->value->int32;
 
     weather->hourly_enabled = true;
@@ -120,6 +129,7 @@ static void appmsg_in_received(DictionaryIterator *received, void *context) {
   else if (hourly_enabled_tuple) {
     weather->hourly_enabled = (bool)hourly_enabled_tuple->value->int32;
     weather->hourly_updated = time(NULL);
+
   }
   else if (error_tuple) {
     weather->error   = WEATHER_E_NETWORK;

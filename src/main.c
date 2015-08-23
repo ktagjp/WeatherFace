@@ -14,6 +14,9 @@
 #define DEBUG_FRAME     (GRect(0, 82, 144, 15))
 #define BATTERY_FRAME   (GRect(110, 0, 144, 8))
 
+// for temporary use
+#define TIMEZONE_DIFF 32400
+
 /* Keep a pointer to the current weather data as a global variable */
 static WeatherData *weather_data;
 
@@ -84,8 +87,12 @@ static void init(void)
 
   window = window_create();
   window_stack_push(window, true /* Animated */);
+<<<<<<< HEAD
   window_set_background_color(window, GColorDukeBlue);
 //  window_set_background_color(window, GColorBlack);
+=======
+  window_set_background_color(window, GColorDukeBlue);  ///////// Change Color to GColorDukeBlue from GColorBlack for Watchface Upper Color ///////
+>>>>>>> develop
 
   weather_data = malloc(sizeof(WeatherData));
   init_network(weather_data);
@@ -106,7 +113,9 @@ static void init(void)
   initial_jsready_timer = app_timer_register(MAX_JS_READY_WAIT, initial_jsready_callback, NULL);
 
   // Update the screen right away
+
   time_t now = time(NULL);
+
   handle_tick(localtime(&now), MINUTE_UNIT | DAY_UNIT );
 
   // And then every minute
