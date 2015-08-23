@@ -2,9 +2,6 @@
 #include "network.h"
 #include "debug_layer.h"
 
-// for temporary use
-#define TIMEZONE_DIFF 32400
-
 static TextLayer *debug_layer;
 
 static char last_update_text[] = "00:00";
