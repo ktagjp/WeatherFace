@@ -2,6 +2,9 @@
 #include "network.h"
 #include "debug_layer.h"
 
+// for temporary use
+#define TIMEZONE_DIFF 32400
+
 static TextLayer *debug_layer;
 
 static char last_update_text[] = "00:00";
@@ -65,7 +68,9 @@ void debug_update_weather(WeatherData *weather_data)
       "L%s, P%s, %s", last_update_text, weather_data->pub_date, weather_data->locale);
 
     // reset localtime, critical as localtime modifies a shared object!
+
     time_t currentTime = time(NULL);
+                                
     localtime(&currentTime);
 
     text_layer_set_text(debug_layer, debug_msg);

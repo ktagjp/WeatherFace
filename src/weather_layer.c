@@ -3,6 +3,9 @@
 #include "weather_layer.h"
 #include "debug_layer.h"
 
+// for temporary use
+#define TIMEZONE_DIFF 32400
+
 static Layer *weather_layer;
 
 // Buffer the day / night time switch around sunrise & sunset
@@ -238,6 +241,7 @@ void weather_layer_update(WeatherData *weather_data)
   }
 
   time_t current_time = time(NULL);
+
   bool stale = false;
   if (current_time - weather_data->updated > WEATHER_STALE_TIMEOUT) {
     stale = true;
@@ -291,8 +295,10 @@ void weather_layer_update(WeatherData *weather_data)
 
       time_t h1t = weather_data->h1_time - weather_data->tzoffset;
       time_t h2t = weather_data->h2_time - weather_data->tzoffset;
-      strftime(time_h1, sizeof(time_h1), "%I%p", localtime(&h1t));
-      strftime(time_h2, sizeof(time_h2), "%I%p", localtime(&h2t));
+      strftime(time_h1, sizeof(time_h1), "%I%p", gmtime(&h1t));      ///////// Change function to gmtime() from localtime() for SDK3 by ktagjp
+      strftime(time_h2, sizeof(time_h2), "%I%p", gmtime(&h2t));      ///////// Change function to gmtime() from localtime() for SDK3 by ktagjp
+//      strftime(time_h1, sizeof(time_h1), "%I%p", localtime(&h1t));
+//      strftime(time_h2, sizeof(time_h2), "%I%p", localtime(&h2t));
 
       if (time_h1[0] == '0') {
         memmove(time_h1, &time_h1[1], sizeof(time_h1) - 1);
@@ -308,10 +314,10 @@ void weather_layer_update(WeatherData *weather_data)
 
       night_time = is_night_time(weather_data->sunrise, weather_data->sunset, weather_data->h1_time);
       weather_layer_set_icon(wunder_weather_icon_for_condition(weather_data->h1_cond, night_time), AREA_HOURLY1);
-
+      
       night_time = is_night_time(weather_data->sunrise, weather_data->sunset, weather_data->h2_time);
       weather_layer_set_icon(wunder_weather_icon_for_condition(weather_data->h2_cond, night_time), AREA_HOURLY2);
-
+      
       snprintf(wld->h1_temp_str, sizeof(wld->h1_temp_str), 
         "%i%s", weather_data->h1_temp, "°");
       snprintf(wld->h2_temp_str, sizeof(wld->h2_temp_str), 
