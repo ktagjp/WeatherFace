@@ -34,6 +34,7 @@
         "media": [
             {
                 "file": "images/screenshot.png",
+                "menuIcon": true,
                 "name": "SCREEN_28x28",
                 "type": "png"
             },
