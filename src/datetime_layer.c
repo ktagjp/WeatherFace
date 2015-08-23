@@ -1,9 +1,6 @@
 #include <pebble.h>
 #include "datetime_layer.h"
 
-// for temporary use
-#define TIMEZONE_DIFF 32400
-  
 static TextLayer *time_layer;
 static TextLayer *date_layer;
 

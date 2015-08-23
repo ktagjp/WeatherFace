@@ -14,9 +14,6 @@
 #define DEBUG_FRAME     (GRect(0, 82, 144, 15))
 #define BATTERY_FRAME   (GRect(110, 0, 144, 8))
 
-// for temporary use
-#define TIMEZONE_DIFF 32400
-
 /* Keep a pointer to the current weather data as a global variable */
 static WeatherData *weather_data;
 

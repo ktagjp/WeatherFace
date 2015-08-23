@@ -3,9 +3,6 @@
 #include "weather_layer.h"
 #include "debug_layer.h"
 
-// for temporary use
-#define TIMEZONE_DIFF 32400
-
 static Layer *weather_layer;
 
 // Buffer the day / night time switch around sunrise & sunset
