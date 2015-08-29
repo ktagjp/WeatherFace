@@ -22,10 +22,10 @@ static VibePattern pat = {
 void UpdateConnection(bool Connected){
 	if (IsConnected_Flag != Connected) {
 	
-		if (Connected)						//  BT Connected
+		if (Connected)						//  When BT is recovered connection, vibrate twice. 
 			vibes_double_pulse();
 		else
-			vibes_enqueue_custom_pattern(pat);
+			vibes_enqueue_custom_pattern(pat);  //  When BT is lost connection, vibrate three times.
 
 		IsConnected_Flag = Connected;
 	}
