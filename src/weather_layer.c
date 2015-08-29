@@ -297,12 +297,6 @@ void weather_layer_update(WeatherData *weather_data)
       strftime(time_h1, sizeof(time_h1), "%I%p", localtime(&h1t));
       strftime(time_h2, sizeof(time_h2), "%I%p", localtime(&h2t));
 
-APP_LOG(APP_LOG_LEVEL_DEBUG, "FUNC:weather_layer_update() weather_data->h1_time  %d", weather_data->h1_time);
-APP_LOG(APP_LOG_LEVEL_DEBUG, "FUNC:weather_layer_update() weather_data->h2_time  %d", weather_data->h2_time);
-APP_LOG(APP_LOG_LEVEL_DEBUG, "FUNC:weather_layer_update() weather_data->tzoffset %d", weather_data->tzoffset);
-APP_LOG(APP_LOG_LEVEL_DEBUG, "FUNC:weather_layer_update() h1t                    %ld", h1t);
-APP_LOG(APP_LOG_LEVEL_DEBUG, "FUNC:weather_layer_update() h2t                    %ld", h2t);
-
       if (time_h1[0] == '0') {
         memmove(time_h1, &time_h1[1], sizeof(time_h1) - 1);
       }
