@@ -7,6 +7,11 @@
 //																				                                        	 //
 ///////////////////////////////////////////////////////////////////////////////////////
 
-#include <pebble.h>
+#ifndef BLUETOOTH_H
+#define BLUETOOTH_H
 
 void UpdateConnection(bool Connected);
+
+extern bool Is_BT_Connected_Flag;
+
+#endif

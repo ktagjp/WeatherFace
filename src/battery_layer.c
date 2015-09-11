@@ -1,10 +1,11 @@
 #include <pebble.h>
 #include "battery_layer.h"
+#include "bluetooth.h"
 
 const uint32_t BATTERY_TIMEOUT = 2000; // 2 second animation 
 const uint8_t  MAX_DOTS = 4;
 
-static Layer *battery_layer;
+Layer *battery_layer;
 
 static AppTimer *battery_animation_timer;
 static bool is_animating = false;
@@ -101,8 +102,13 @@ void battery_layer_update(Layer *me, GContext *ctx)
   int8_t spacer  = 7; // pixels
   int8_t start_x = spacer * MAX_DOTS;
   
-  graphics_context_set_fill_color(ctx, GColorWhite);
-  graphics_context_set_stroke_color(ctx, GColorWhite);
+  if (Is_BT_Connected_Flag) {								// if BT is connected, battery dots isGColorWhite
+    graphics_context_set_fill_color(ctx, GColorWhite);
+    graphics_context_set_stroke_color(ctx, GColorWhite);
+  } else {													// if BT is disconnected, battery dots isGColorYellow
+    graphics_context_set_fill_color(ctx, GColorMagenta);
+    graphics_context_set_stroke_color(ctx, GColorMagenta);
+  }
   for (int i=0; i<MAX_DOTS; i++) {
     if (i<dots) {
       graphics_fill_circle(ctx, GPoint(start_x-(i*spacer), 4), 2);

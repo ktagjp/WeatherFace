@@ -8,4 +8,6 @@ void battery_timer_callback();
 void battery_layer_update(Layer *me, GContext *ctx);
 void battery_layer_destroy();
 
+extern Layer *battery_layer;
+
 #endif

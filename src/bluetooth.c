@@ -9,8 +9,9 @@
 
 #include <pebble.h>
 #include "bluetooth.h"
+#include "battery_layer.h"
 
-static bool IsConnected_Flag = 1;
+bool Is_BT_Connected_Flag = 1;
 
 // Vibe pattern: ON for 200ms, OFF for 100ms, ON for 400ms:
 static const uint32_t const segments[] = { 200, 100, 200, 100, 200 };
@@ -20,14 +21,16 @@ static VibePattern pat = {
 };
 
 void UpdateConnection(bool Connected){
-	if (IsConnected_Flag != Connected) {
+
+	if (Is_BT_Connected_Flag != Connected) {
 	
-		if (Connected)						//  When BT is recovered connection, vibrate twice. 
+		if (Connected)							//  When BT is recovered connection, vibrate twice. 
 			vibes_double_pulse();
 		else
 			vibes_enqueue_custom_pattern(pat);  //  When BT is lost connection, vibrate three times.
 
-		IsConnected_Flag = Connected;
+		Is_BT_Connected_Flag = Connected;
+		layer_mark_dirty(battery_layer);		// Force to redraw battery layer in "battery_layer.c"
 	}
 	//APP_LOG(APP_LOG_LEVEL_INFO, "SmartFace: BT-Connection was updated!");
 }
