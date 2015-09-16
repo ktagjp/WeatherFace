@@ -1,5 +1,6 @@
 var SERVICE_OPEN_WEATHER  = "open";
 var SERVICE_YAHOO_WEATHER = "yahoo";
+var SERVICE_WUNDERGROUND  = "wunder";
 var EXTERNAL_DEBUG_URL    = '';
 var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/';    //////// Change URL to my Github page //////
 
@@ -51,11 +52,12 @@ Pebble.addEventListener("ready", function(e) {
 Pebble.addEventListener("appmessage", function(data) {
     console.log("Got a message - Starting weather request ... " + JSON.stringify(data));
     try {
-      Global.config.weatherService = data.payload.service === SERVICE_OPEN_WEATHER ? SERVICE_OPEN_WEATHER : SERVICE_YAHOO_WEATHER;
-      Global.config.debugEnabled   = data.payload.debug   === 1;
-      Global.config.batteryEnabled = data.payload.battery === 1;
-      Global.config.weatherScale   = data.payload.scale   === 'C' ? 'C' : 'F';
-      Global.wuApiKey              = window.localStorage.getItem('wuApiKey');
+      Global.config.weatherService
+		= (data.payload.service === SERVICE_OPEN_WEATHER) ? SERVICE_OPEN_WEATHER : (data.payload.service === SERVICE_YAHOO_WEATHER) ? SERVICE_YAHOO_WEATHER : SERVICE_WUNDERGROUND;
+      Global.config.debugEnabled   =  data.payload.debug   === 1;
+      Global.config.batteryEnabled =  data.payload.battery === 1;
+      Global.config.weatherScale   = (data.payload.scale   === 'C') ? 'C' : 'F';
+      Global.wuApiKey              =  window.localStorage.getItem('wuApiKey');
       updateWeather();
     } catch (ex) {
       console.warn("Could not retrieve data sent from Pebble: "+ex.message);

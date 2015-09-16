@@ -102,12 +102,12 @@ void battery_layer_update(Layer *me, GContext *ctx)
   int8_t spacer  = 7; // pixels
   int8_t start_x = spacer * MAX_DOTS;
   
-  if (Is_BT_Connected_Flag) {								// if BT is connected, battery dots isGColorWhite
+  if (Is_BT_Connected_Flag) {								// if BT is connected, battery dots become GColorWhite
     graphics_context_set_fill_color(ctx, GColorWhite);
     graphics_context_set_stroke_color(ctx, GColorWhite);
-  } else {													// if BT is disconnected, battery dots isGColorYellow
-    graphics_context_set_fill_color(ctx, GColorMagenta);
-    graphics_context_set_stroke_color(ctx, GColorMagenta);
+  } else {													// if BT is disconnected, battery dots become GColorOxfordBlue
+    graphics_context_set_fill_color(ctx, GColorOxfordBlue);
+    graphics_context_set_stroke_color(ctx, GColorOxfordBlue);
   }
   for (int i=0; i<MAX_DOTS; i++) {
     if (i<dots) {
