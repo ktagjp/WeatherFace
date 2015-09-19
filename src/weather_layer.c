@@ -283,10 +283,12 @@ void weather_layer_update(WeatherData *weather_data)
        (int)current_time, (int)utc, weather_data->sunrise, weather_data->sunset, night_time);
     */
 
-    if (strcmp(weather_data->service, SERVICE_OPEN_WEATHER) == 0) {
-      weather_layer_set_icon(open_weather_icon_for_condition(weather_data->condition, night_time), AREA_PRIMARY);
-    } else {
-      weather_layer_set_icon(yahoo_weather_icon_for_condition(weather_data->condition, night_time), AREA_PRIMARY);
+	if (strcmp(weather_data->service, SERVICE_OPEN_WEATHER) == 0) {
+		weather_layer_set_icon(open_weather_icon_for_condition(weather_data->condition, night_time), AREA_PRIMARY);
+	} else if (strcmp(weather_data->service, SERVICE_YAHOO_WEATHER) == 0) {
+		weather_layer_set_icon(yahoo_weather_icon_for_condition(weather_data->condition, night_time), AREA_PRIMARY);
+	} else {
+		weather_layer_set_icon(wunder_weather_icon_for_condition(weather_data->condition, night_time), AREA_PRIMARY);
     }
 
     if (weather_data->hourly_updated != 0 && weather_data->hourly_enabled) {

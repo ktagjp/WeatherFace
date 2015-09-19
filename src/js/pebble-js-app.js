@@ -1,6 +1,6 @@
 var SERVICE_OPEN_WEATHER  = "open";
 var SERVICE_YAHOO_WEATHER = "yahoo";
-var SERVICE_WUNDERGROUND  = "wunder";
+var SERVICE_WUNDERGROUND  = "wunder";		///// Add WeatherUnderground for Current Weather Conditions
 var EXTERNAL_DEBUG_URL    = '';
 var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/';    //////// Change URL to my Github page //////
 
@@ -42,24 +42,25 @@ Pebble.addEventListener("ready", function(e) {
     Pebble.sendAppMessage(data, ack, function(e){
       nack(data);
     });
-    var initialInstall = window.localStorage.getItem('initialInstall');
+	var initialInstall = window.localStorage.getItem('initialInstall');
     if (initialInstall === null && Global.wuApiKey === null) {
-      window.localStorage.setItem('initialInstall', false);
-      Pebble.showSimpleNotificationOnPebble("API Key Needed", "This watchface requires a free API key from Weather Underground. Please visit Settings in the Pebble App to find out more!");
-    }
+		window.localStorage.setItem('initialInstall', false);
+		Pebble.showSimpleNotificationOnPebble("API Key Needed", "This watchface requires a free API key from Weather Underground. Please visit Settings in the Pebble App to find out more!");
+	}
 });
 
 Pebble.addEventListener("appmessage", function(data) {
     console.log("Got a message - Starting weather request ... " + JSON.stringify(data));
     try {
-      Global.config.weatherService
-		= (data.payload.service === SERVICE_OPEN_WEATHER) ? SERVICE_OPEN_WEATHER : (data.payload.service === SERVICE_YAHOO_WEATHER) ? SERVICE_YAHOO_WEATHER : SERVICE_WUNDERGROUND;
-      Global.config.debugEnabled   =  data.payload.debug   === 1;
-      Global.config.batteryEnabled =  data.payload.battery === 1;
-      Global.config.weatherScale   = (data.payload.scale   === 'C') ? 'C' : 'F';
-      Global.wuApiKey              =  window.localStorage.getItem('wuApiKey');
-      updateWeather();
-    } catch (ex) {
+		Global.config.weatherService = (data.payload.service === SERVICE_OPEN_WEATHER) ?  SERVICE_OPEN_WEATHER		///// Add WeatherUnderground for Current Weather Conditions
+									 : (data.payload.service === SERVICE_YAHOO_WEATHER) ? SERVICE_YAHOO_WEATHER
+									 : SERVICE_WUNDERGROUND;
+		Global.config.debugEnabled   =  data.payload.debug   === 1;
+		Global.config.batteryEnabled =  data.payload.battery === 1;
+		Global.config.weatherScale   = (data.payload.scale   === 'C') ? 'C' : 'F';
+		Global.wuApiKey              =  window.localStorage.getItem('wuApiKey');
+		updateWeather();
+	} catch (ex) {
       console.warn("Could not retrieve data sent from Pebble: "+ex.message);
     }
 });
@@ -75,7 +76,7 @@ Pebble.addEventListener("showConfiguration", function (e) {
       'u': Global.config.weatherScale,
       'b': Global.config.batteryEnabled ? 'on' : 'off',
       'a': Global.wuApiKey
-    }
+    };
     var url = CONFIGURATION_URL+'?'+serialize(options);
     console.log('Configuration requested using url: '+url);
     Pebble.openURL(url);
@@ -100,33 +101,35 @@ Pebble.addEventListener("webviewclosed", function(e) {
                              settings.scale    !== Global.config.weatherScale   || 
                              settings.wuApiKey !== Global.wuApiKey);
 
-        Global.config.weatherService = settings.service === SERVICE_OPEN_WEATHER ? SERVICE_OPEN_WEATHER : SERVICE_YAHOO_WEATHER;
+        Global.config.weatherService = (settings.service === SERVICE_OPEN_WEATHER)  ? SERVICE_OPEN_WEATHER
+									 : (settings.service === SERVICE_YAHOO_WEATHER) ? SERVICE_YAHOO_WEATHER
+									 : SERVICE_WUNDERGROUND;													///// Add WeatherUnderground for Current Weather Conditions
         Global.config.weatherScale   = settings.scale   === 'C' ? 'C' : 'F';
         Global.config.debugEnabled   = settings.debug   === 'true';
         Global.config.batteryEnabled = settings.battery === 'on';
         Global.wuApiKey              = settings.wuApiKey;
 
-        if (Global.wuApiKey !== null) {
-          window.localStorage.setItem('wuApiKey', Global.wuApiKey);
-        } else {
-          window.localStorage.removeItem('wuApiKey');
-        }
+		if (Global.wuApiKey !== null) {
+			window.localStorage.setItem('wuApiKey', Global.wuApiKey);
+		} else {
+			window.localStorage.removeItem('wuApiKey');
+		}
         
-        var config = {
-          service: Global.config.weatherService,
-          scale:   Global.config.weatherScale,
-          debug:   Global.config.debugEnabled   ? 1 : 0,
-          battery: Global.config.batteryEnabled ? 1 : 0
-        };
+		var config = {
+			service: Global.config.weatherService,
+			scale:   Global.config.weatherScale,
+			debug:   Global.config.debugEnabled   ? 1 : 0,
+			battery: Global.config.batteryEnabled ? 1 : 0
+		};
 
-        Pebble.sendAppMessage(config, ack, function(ev){
-          nack(config);
-        });
+		Pebble.sendAppMessage(config, ack, function(ev){
+			nack(config);
+		});
 
-        if (refreshNeeded) {
-          updateWeather();
-        }
-      } catch(ex) {
+		if (refreshNeeded) {
+			updateWeather();
+		}
+	} catch(ex) {
         console.warn("Unable to parse response from configuration:"+ex.message);
       }
     }
@@ -164,16 +167,20 @@ var updateWeather = function () {
 }
 
 var locationSuccess = function (pos) {
-    var coordinates = pos.coords;
-    console.log("Got coordinates: " + JSON.stringify(coordinates));
-    if (Global.config.weatherService === SERVICE_OPEN_WEATHER) {
-      fetchOpenWeather(coordinates.latitude, coordinates.longitude);
+	var coordinates = pos.coords;
+	console.log("Got coordinates: " + JSON.stringify(coordinates));
+
+	if (Global.config.weatherService === SERVICE_OPEN_WEATHER) {
+		fetchOpenWeather(coordinates.latitude, coordinates.longitude);
+	} else if (Global.config.weatherService === SERVICE_YAHOO_WEATHER) {
+		fetchYahooWeather(coordinates.latitude, coordinates.longitude);
     } else {
-      fetchYahooWeather(coordinates.latitude, coordinates.longitude);
-    }
-    if (Global.wuApiKey !== null) {
-      fetchWunderWeather(coordinates.latitude, coordinates.longitude);
-    } else {
+		fetchWunderWeather(coordinates.latitude, coordinates.longitude);		///// Add WeatherUnderground for Current Weather Conditions
+	}
+
+	if (Global.wuApiKey !== null) {
+		fetchWunderWeatherForcast(coordinates.latitude, coordinates.longitude);
+	} else {
       var data = {hourly_enabled: 0};
       console.log("Hourly disabled, no WU ApiKey");
       Pebble.sendAppMessage(data, ack, function(ev){
@@ -192,8 +199,7 @@ var locationError = function (err) {
 
 var fetchYahooWeather = function(latitude, longitude) {
 
-  var subselect, neighbor, query, multi
-    , options = {};
+  var subselect, neighbor, query, multi, options = {};
 
   subselect   = 'SELECT woeid FROM geo.placefinder WHERE text="'+latitude+','+longitude+'" AND gflags="R"';
   neighbor    = 'SELECT * FROM geo.placefinder WHERE text="'+latitude+','+longitude+'" AND gflags="R";';
@@ -265,6 +271,73 @@ var fetchOpenWeather = function(latitude, longitude) {
 };
 
 var fetchWunderWeather = function(latitude, longitude) {
+	var subselect, neighbor, query, multi;
+	var sunrise, sunset, pubdate, options = {};
+
+	subselect   = 'SELECT woeid FROM geo.placefinder WHERE text="'+latitude+','+longitude+'" AND gflags="R"';
+	neighbor    = 'SELECT * FROM geo.placefinder WHERE text="'+latitude+','+longitude+'" AND gflags="R";';
+	query       = 'SELECT * FROM weather.forecast WHERE woeid IN ('+subselect+') AND u="'+Global.config.weatherScale.toLowerCase()+'";';
+	multi       = "SELECT * FROM yql.query.multi WHERE queries='"+query+" "+neighbor+"'";
+	options.url = "https://query.yahooapis.com/v1/public/yql?format=json&q="+encodeURIComponent(multi)+"&nocache="+new Date().getTime();
+
+	options.parse = function(responseYahoo) {
+		sunrise = responseYahoo.query.results.results[0].channel.astronomy.sunrise;
+		sunset  = responseYahoo.query.results.results[0].channel.astronomy.sunset;
+		pubdate = new Date(Date.parse(responseYahoo.query.results.results[0].channel.item.pubDate));
+	};
+
+	options = {};
+	options.url = 'http://api.wunderground.com/api/'+Global.wuApiKey+'/conditions/q/'+latitude+','+longitude+'.json';
+
+	options.parse = function(responseWunder) {
+
+		return {
+			condition:		Wunder_Comvert(responseWunder.current_observation.icon),
+			temperature:	parseInt(responseWunder.current_observation.temp_c), 
+			sunrise:		Date.parse(new Date().toDateString()+" "+sunrise) / 1000,
+			sunset:			Date.parse(new Date().toDateString()+" "+sunset) / 1000,
+			locale:			responseWunder.current_observation.display_location.city,
+			pubdate:		pubdate.getHours()+':'+('0'+pubdate.getMinutes()).slice(-2),
+			tzoffset:		new Date().getTimezoneOffset() * 60
+		};
+	};
+	fetchWeather(options);
+};
+
+var Wunder_Comvert = function(condition) {
+	if (condition == "clear" || condition == "sunny")
+		return 1;
+	else if (condition == "mostlysunny" || condition == "partlycloudy")
+		return 2;
+	else if (condition == "mostlycloudy" || condition == "partlysunny")
+		return 3;
+	else if (condition == "cloudy")
+		return 4;
+	else if (condition == "hazy")
+		return 5;
+	else if (condition == "fog")
+		return 6;
+	else if (condition == "chancerain")
+		return 12;
+	else if (condition == "rain")
+		return 13;
+	else if (condition == "chancetstorms")
+		return 14;
+	else if (condition == "tstorms" || condition == "unknown")
+		return 15;
+	else if (condition == "flurries" || condition == "sleet")
+		return 16;
+	else if (condition == "chancesnow")
+		return 20;
+	else if (condition == "snow")
+		return 21;
+	else if (condition == "chanceflurries" || condition == "chancesleet")
+		return 22;
+	else
+		return 7;
+};
+
+var fetchWunderWeatherForcast = function(latitude, longitude) {
 
   var options = {};
   options.url = 'http://api.wunderground.com/api/'+Global.wuApiKey+'/hourly/q/'+latitude+','+longitude+'.json';
@@ -287,7 +360,6 @@ var fetchWunderWeather = function(latitude, longitude) {
   };
   fetchWeather(options);
 };
-
 
 var fetchWeather = function(options) {
 
