@@ -96,7 +96,7 @@
 	<SCRIPT>
 		function saveOptions() {
 			return {
-				'service': $("#radioyahoo").is(':checked') ? 'yahoo' : 'open',
+				'service': $("#radioyahoo").is(':checked') ? 'yahoo' : $("#radioopen").is(':checked') ? 'open' : 'wunder',
 				'scale':   $("#radioF").is(':checked')     ? 'F' : 'C',				
 				'battery': $("select[name=flipbattery]").prop('selectedIndex') ? 'on' : 'off',
 				'debug':   $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
@@ -134,8 +134,10 @@
 
 			if (service === 'open') {
 				$("#radioopen").attr("checked", "checked");
-			} else {
+			} else if (service === 'yahoo') {
 				$("#radioyahoo").attr("checked", "checked");
+			} else {
+				$("#radiowunder").attr("checked", "checked");
 			}
 
 			$("input[name='weather-service']").checkboxradio("refresh");
