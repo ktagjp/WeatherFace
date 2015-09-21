@@ -33,17 +33,6 @@
     "resources": {
         "media": [
             {
-                "file": "images/screenshot.png",
-                "menuIcon": true,
-                "name": "SCREEN_28x28",
-                "type": "png"
-            },
-            {
-                "file": "images/45x45.png",
-                "name": "ICON_45X45",
-                "type": "png"
-            },
-            {
                 "file": "images/30x30.png",
                 "name": "ICON_30X30",
                 "type": "png"
@@ -70,9 +59,20 @@
                 "type": "font"
             },
             {
+                "file": "images/45x45.png",
+                "name": "ICON_45X45",
+                "type": "png"
+            },
+            {
                 "file": "fonts/futura_condensed_bold-webfont.ttf",
                 "name": "FUTURA_CONDENSED_53",
                 "type": "font"
+            },
+            {
+                "file": "images/screenshot.png",
+                "menuIcon": true,
+                "name": "SCREEN_28x28",
+                "type": "png"
             }
         ]
     },

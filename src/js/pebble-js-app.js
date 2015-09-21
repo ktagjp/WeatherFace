@@ -1,6 +1,6 @@
-var SERVICE_OPEN_WEATHER  = "open";
-var SERVICE_YAHOO_WEATHER = "yahoo";
-var SERVICE_WUNDERGROUND  = "wunder";		///// Add WeatherUnderground for Current Weather Conditions
+var SERVICE_OPEN_WEATHER    = "open";
+var SERVICE_YAHOO_WEATHER   = "yahoo";
+var SERVICE_WUNDER_WEATHER  = "wundr";		///// Add WeatherUnderground for Current Weather Conditions
 var EXTERNAL_DEBUG_URL    = '';
 var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/';    //////// Change URL to my Github page //////
 
@@ -52,9 +52,9 @@ Pebble.addEventListener("ready", function(e) {
 Pebble.addEventListener("appmessage", function(data) {
     console.log("Got a message - Starting weather request ... " + JSON.stringify(data));
     try {
-		Global.config.weatherService = (data.payload.service === SERVICE_OPEN_WEATHER) ?  SERVICE_OPEN_WEATHER		///// Add WeatherUnderground for Current Weather Conditions
-									 : (data.payload.service === SERVICE_YAHOO_WEATHER) ? SERVICE_YAHOO_WEATHER
-									 : SERVICE_WUNDERGROUND;
+		Global.config.weatherService =    (data.payload.service === SERVICE_OPEN_WEATHER) ?  SERVICE_OPEN_WEATHER		///// Add WeatherUnderground for Current Weather Conditions
+										: (data.payload.service === SERVICE_YAHOO_WEATHER) ? SERVICE_YAHOO_WEATHER
+										: SERVICE_WUNDER_WEATHER;
 		Global.config.debugEnabled   =  data.payload.debug   === 1;
 		Global.config.batteryEnabled =  data.payload.battery === 1;
 		Global.config.weatherScale   = (data.payload.scale   === 'C') ? 'C' : 'F';
@@ -101,9 +101,9 @@ Pebble.addEventListener("webviewclosed", function(e) {
                              settings.scale    !== Global.config.weatherScale   || 
                              settings.wuApiKey !== Global.wuApiKey);
 
-        Global.config.weatherService = (settings.service === SERVICE_OPEN_WEATHER)  ? SERVICE_OPEN_WEATHER
-									 : (settings.service === SERVICE_YAHOO_WEATHER) ? SERVICE_YAHOO_WEATHER
-									 : SERVICE_WUNDERGROUND;													///// Add WeatherUnderground for Current Weather Conditions
+        Global.config.weatherService =    (settings.service === SERVICE_OPEN_WEATHER)  ? SERVICE_OPEN_WEATHER
+										: (settings.service === SERVICE_YAHOO_WEATHER) ? SERVICE_YAHOO_WEATHER
+										: SERVICE_WUNDER_WEATHER;													///// Add WeatherUnderground for Current Weather Conditions
         Global.config.weatherScale   = settings.scale   === 'C' ? 'C' : 'F';
         Global.config.debugEnabled   = settings.debug   === 'true';
         Global.config.batteryEnabled = settings.battery === 'on';
@@ -199,39 +199,39 @@ var locationError = function (err) {
 
 var fetchYahooWeather = function(latitude, longitude) {
 
-  var subselect, neighbor, query, multi, options = {};
+	var subselect, neighbor, query, multi, optionsA = {};
 
-  subselect   = 'SELECT woeid FROM geo.placefinder WHERE text="'+latitude+','+longitude+'" AND gflags="R"';
-  neighbor    = 'SELECT * FROM geo.placefinder WHERE text="'+latitude+','+longitude+'" AND gflags="R";';
-  query       = 'SELECT * FROM weather.forecast WHERE woeid IN ('+subselect+') AND u="'+Global.config.weatherScale.toLowerCase()+'";';
-  multi       = "SELECT * FROM yql.query.multi WHERE queries='"+query+" "+neighbor+"'";
-  options.url = "https://query.yahooapis.com/v1/public/yql?format=json&q="+encodeURIComponent(multi)+"&nocache="+new Date().getTime();
+	subselect   = 'SELECT woeid FROM geo.placefinder WHERE text="'+latitude+','+longitude+'" AND gflags="R"';
+	neighbor    = 'SELECT * FROM geo.placefinder WHERE text="'+latitude+','+longitude+'" AND gflags="R";';
+	query       = 'SELECT * FROM weather.forecast WHERE woeid IN ('+subselect+') AND u="'+Global.config.weatherScale.toLowerCase()+'";';
+	multi       = "SELECT * FROM yql.query.multi WHERE queries='"+query+" "+neighbor+"'";
+	optionsA.url = "https://query.yahooapis.com/v1/public/yql?format=json&q="+encodeURIComponent(multi)+"&nocache="+new Date().getTime();
 
-  options.parse = function(response) {
-      var sunrise, sunset, pubdate, locale;
-      sunrise = response.query.results.results[0].channel.astronomy.sunrise;
-      sunset  = response.query.results.results[0].channel.astronomy.sunset;
-      pubdate = new Date(Date.parse(response.query.results.results[0].channel.item.pubDate));
-      locale  = response.query.results.results[1].Result.neighborhood;
-      if (locale === null) {
-        locale = response.query.results.results[1].Result.city;
-      }
-      if (locale === null) {
-        locale = 'unknown';
-      }
+	optionsA.parse = function(response) {
+		var sunrise, sunset, pubdate, locale;
+		sunrise = response.query.results.results[0].channel.astronomy.sunrise;
+		sunset  = response.query.results.results[0].channel.astronomy.sunset;
+		pubdate = new Date(Date.parse(response.query.results.results[0].channel.item.pubDate));
+		locale  = response.query.results.results[1].Result.neighborhood;
+		if (locale === null) {
+			locale = response.query.results.results[1].Result.city;
+		}
+		if (locale === null) {
+			locale = 'unknown';
+		}
 
-      return {
-        condition:   parseInt(response.query.results.results[0].channel.item.condition.code),
-        temperature: parseInt(response.query.results.results[0].channel.item.condition.temp),
-        sunrise:     Date.parse(new Date().toDateString()+" "+sunrise) / 1000,
-        sunset:      Date.parse(new Date().toDateString()+" "+sunset) / 1000,
-        locale:      locale,
-        pubdate:     pubdate.getHours()+':'+('0'+pubdate.getMinutes()).slice(-2),
-        tzoffset:    new Date().getTimezoneOffset() * 60
-      };
-  };
+		return {
+			condition:   parseInt(response.query.results.results[0].channel.item.condition.code),
+			temperature: parseInt(response.query.results.results[0].channel.item.condition.temp),
+			sunrise:     Date.parse(new Date().toDateString()+" "+sunrise) / 1000,
+			sunset:      Date.parse(new Date().toDateString()+" "+sunset) / 1000,
+			locale:      locale,
+			pubdate:     pubdate.getHours()+':'+('0'+pubdate.getMinutes()).slice(-2),
+			tzoffset:    new Date().getTimezoneOffset() * 60
+		};
+	};
 
-  fetchWeather(options); 
+	fetchWeather(optionsA); 
 };
 
 var fetchOpenWeather = function(latitude, longitude) {
@@ -271,36 +271,45 @@ var fetchOpenWeather = function(latitude, longitude) {
 };
 
 var fetchWunderWeather = function(latitude, longitude) {
-	var subselect, neighbor, query, multi;
+
 	var sunrise, sunset, pubdate, options = {};
+	var tz_offset, unixtime, date, year, month, day, hour, min;
 
-	subselect   = 'SELECT woeid FROM geo.placefinder WHERE text="'+latitude+','+longitude+'" AND gflags="R"';
-	neighbor    = 'SELECT * FROM geo.placefinder WHERE text="'+latitude+','+longitude+'" AND gflags="R";';
-	query       = 'SELECT * FROM weather.forecast WHERE woeid IN ('+subselect+') AND u="'+Global.config.weatherScale.toLowerCase()+'";';
-	multi       = "SELECT * FROM yql.query.multi WHERE queries='"+query+" "+neighbor+"'";
-	options.url = "https://query.yahooapis.com/v1/public/yql?format=json&q="+encodeURIComponent(multi)+"&nocache="+new Date().getTime();
+	options.url = 'http://api.wunderground.com/api/'+Global.wuApiKey+'/astronomy/conditions/q/'+latitude+','+longitude+'.json';
 
-	options.parse = function(responseYahoo) {
-		sunrise = responseYahoo.query.results.results[0].channel.astronomy.sunrise;
-		sunset  = responseYahoo.query.results.results[0].channel.astronomy.sunset;
-		pubdate = new Date(Date.parse(responseYahoo.query.results.results[0].channel.item.pubDate));
-	};
+	options.parse = function(response) {
+		tz_offset = (parseInt(response.current_observation.local_tz_offset) / 100) * 32400;
+		unixtime = parseInt(response.current_observation.observation_epoch) + tz_offset;
+		date = new Date(unixtime * 1000);
+		year = date.getFullYear();
+		month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+		day =   (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
 
-	options = {};
-	options.url = 'http://api.wunderground.com/api/'+Global.wuApiKey+'/conditions/q/'+latitude+','+longitude+'.json';
+		hour = response.sun_phase.sunrise.hour;
+		hour = (hour.length === 1) ? '0' + hour : hour;
+		min  = response.sun_phase.sunrise.minute;
+		min  = (min.length === 1) ? '0' + min : min;
+		sunrise = Math.floor( new Date(year + "/" + month + "/" + day + ' ' + hour + ":" + min + ":" + "00").getTime() / 1000 ) - tz_offset;
 
-	options.parse = function(responseWunder) {
+		hour = response.sun_phase.sunset.hour;
+		hour = (hour.length === 1) ? '0' + hour : hour;
+		min  = response.sun_phase.sunset.minute;
+		min  = (min.length === 1) ? '0' + min : min;
+		sunset = Math.floor( new Date(year + "/" + month + "/" + day + ' ' + hour + ":" + min + ":" + "00").getTime() / 1000 ) - tz_offset;
+
+		pubdate   = new Date(parseInt(response.current_observation.observation_epoch) * 1000);
 
 		return {
-			condition:		Wunder_Comvert(responseWunder.current_observation.icon),
-			temperature:	parseInt(responseWunder.current_observation.temp_c), 
-			sunrise:		Date.parse(new Date().toDateString()+" "+sunrise) / 1000,
-			sunset:			Date.parse(new Date().toDateString()+" "+sunset) / 1000,
-			locale:			responseWunder.current_observation.display_location.city,
-			pubdate:		pubdate.getHours()+':'+('0'+pubdate.getMinutes()).slice(-2),
-			tzoffset:		new Date().getTimezoneOffset() * 60
+				condition:		Wunder_Comvert(response.current_observation.icon),
+				temperature:	response.current_observation.temp_c,
+				sunrise:		sunrise,
+				sunset:			sunset,
+				locale:			response.current_observation.display_location.city,
+				pubdate:		pubdate.getHours()+':'+('0'+pubdate.getMinutes()).slice(-2),
+				tzoffset:		new Date().getTimezoneOffset() * 60
 		};
 	};
+
 	fetchWeather(options);
 };
 

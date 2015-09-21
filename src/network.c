@@ -63,13 +63,16 @@ static void appmsg_in_received(DictionaryIterator *received, void *context) {
       debug_enable_display();
       debug_update_weather(weather);
     }
-    
+   
     APP_LOG(APP_LOG_LEVEL_DEBUG, "Weather temp:%i cond:%i pd:%s tzos:%i loc:%s", 
       weather->temperature, weather->condition, weather->pub_date, weather->tzoffset, weather->locale);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Weather sunrise:%i sunset:%i", weather->sunrise, weather->sunset);
   }
   // Configuration Update
   else if (service_tuple) {
-    char* service = strcmp(service_tuple->value->cstring, SERVICE_OPEN_WEATHER) == 0 ? SERVICE_OPEN_WEATHER : SERVICE_YAHOO_WEATHER;
+    char* service =   strcmp(service_tuple->value->cstring, SERVICE_OPEN_WEATHER) == 0 ? SERVICE_OPEN_WEATHER
+					: strcmp(service_tuple->value->cstring, SERVICE_YAHOO_WEATHER) == 0 ? SERVICE_YAHOO_WEATHER
+					: SERVICE_WUNDER_WEATHER;
     char* scale   = strcmp(scale_tuple->value->cstring, SCALE_CELSIUS) == 0 ? SCALE_CELSIUS : SCALE_FAHRENHEIT;
     strncpy(weather->service, service, 6);
     strncpy(weather->scale, scale, 2);
