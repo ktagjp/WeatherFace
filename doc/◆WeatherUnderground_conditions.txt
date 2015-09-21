@@ -1,0 +1,104 @@
+◆WeatherUnderground "conditions"
+
+◆Query => http://api.wunderground.com/api/ee8b33218f4c9368/conditions/q/35.611,139.683.json
+
+◆Response
+
+{
+	"response": {
+		"version":"0.1",
+		"termsofService":"http://www.wunderground.com/weather/api/d/terms.html",
+		"features": {
+			"conditions": 1
+		}
+	},
+
+	"current_observation": {
+		"image": {
+			"url":"http://icons.wxug.com/graphics/wu2/logo_130x80.png",
+			"title":"Weather Underground",
+			"link":"http://www.wunderground.com"
+		},
+
+		"display_location": {
+			"full":"Meguro-ku, Japan",
+			"city":"Meguro-ku",
+			"state":"",
+			"state_name":"Japan",
+			"country":"JP",
+			"country_iso3166":"JP",
+			"zip":"00000",
+			"magic":"8",
+			"wmo":"47683",
+			"latitude":"35.610000",
+			"longitude":"139.680000",
+			"elevation":"27.00000000"
+		},
+
+		"observation_location": {
+			"full":"Seijo, Setagaya-ku, ä¸ç°è°·åº, æ±äº¬é½",
+			"city":"Seijo, Setagaya-ku, ä¸ç°è°·åº",
+			"state":"æ±äº¬é½",
+			"country":"日本",
+			"country_iso3166":"JP",
+			"latitude":"35.650696",
+			"longitude":"139.601105",
+			"elevation":"144 ft"
+		},
+
+		"estimated": {
+		},
+
+		"station_id":"I1321",
+		"observation_time":"Last Updated on September 19, 8:53 PM JST",
+		"observation_time_rfc822":"Sat, 19 Sep 2015 20:53:45 +0900",
+		"observation_epoch":"1442663625",
+		"local_time_rfc822":"Sat, 19 Sep 2015 21:04:28 +0900",
+		"local_epoch":"1442664268",
+		"local_tz_short":"JST",
+		"local_tz_long":"Asia/Tokyo",
+		"local_tz_offset":"+0900",
+		"weather":"Scattered Clouds",
+		"temperature_string":"75.2 F (24.0 C)",
+		"temp_f":75.2,
+		"temp_c":24.0,
+		"relative_humidity":"52%",
+		"wind_string":"Calm",
+		"wind_dir":"NE",
+		"wind_degrees":53,
+		"wind_mph":0.0,
+		"wind_gust_mph":0,
+		"wind_kph":0,
+		"wind_gust_kph":0,
+		"pressure_mb":"1005",
+		"pressure_in":"29.68",
+		"pressure_trend":"0",
+		"dewpoint_string":"56 F (14 C)",
+		"dewpoint_f":56,
+		"dewpoint_c":14,
+		"heat_index_string":"NA",
+		"heat_index_f":"NA",
+		"heat_index_c":"NA",
+		"windchill_string":"NA",
+		"windchill_f":"NA",
+		"windchill_c":"NA",
+		"feelslike_string":"75.2 F (24.0 C)",
+		"feelslike_f":"75.2",
+		"feelslike_c":"24.0",
+		"visibility_mi":"6.2",
+		"visibility_km":"10.0",
+		"solarradiation":"--",
+		"UV":"1","precip_1hr_string":"0.00 in ( 0 mm)",
+		"precip_1hr_in":"0.00",
+		"precip_1hr_metric":" 0",
+		"precip_today_string":"0.05 in (1 mm)",
+		"precip_today_in":"0.05",
+		"precip_today_metric":"1",
+		"icon":"partlycloudy",
+		"icon_url":"http://icons.wxug.com/i/c/k/nt_partlycloudy.gif",
+		"forecast_url":"http://www.wunderground.com/global/stations/47683.html",
+		"history_url":"http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=I1321",
+		"ob_url":"http://www.wunderground.com/cgi-bin/findweather/getForecast?query=35.650696,139.601105",
+		"nowcast":""
+	}
+}
