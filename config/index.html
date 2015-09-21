@@ -26,8 +26,8 @@
 						<LABEL for="radioyahoo">YAHOO! Weather</LABEL>
 					<INPUT name="weather-service" class="custom" id="radioopen"    type="radio" value="open">
 						<LABEL for="radioopen">Open Weather Map</LABEL>
-					<INPUT name="weather-service" class="custom" id="radiowunder"  type="radio" value="wunder">
-						<LABEL for="radiowunder">Weather Undergroundp</LABEL>
+					<INPUT name="weather-service" class="custom" id="radiowundr"  type="radio" value="wundr">
+						<LABEL for="radiowundr">Weather Undergroundp</LABEL>
 				</FIELDSET>
 			</DIV>
 
@@ -96,7 +96,7 @@
 	<SCRIPT>
 		function saveOptions() {
 			return {
-				'service': $("#radioyahoo").is(':checked') ? 'yahoo' : $("#radioopen").is(':checked') ? 'open' : 'wunder',
+				'service': $("#radioyahoo").is(':checked') ? 'yahoo' : $("#radioopen").is(':checked') ? 'open' : 'wundr',
 				'scale':   $("#radioF").is(':checked')     ? 'F' : 'C',				
 				'battery': $("select[name=flipbattery]").prop('selectedIndex') ? 'on' : 'off',
 				'debug':   $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
@@ -137,7 +137,7 @@
 			} else if (service === 'yahoo') {
 				$("#radioyahoo").attr("checked", "checked");
 			} else {
-				$("#radiowunder").attr("checked", "checked");
+				$("#radiowundr").attr("checked", "checked");
 			}
 
 			$("input[name='weather-service']").checkboxradio("refresh");
