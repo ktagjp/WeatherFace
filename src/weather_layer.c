@@ -23,20 +23,19 @@ static int  animation_step = 0;
 static char time_h1[] = "00XX";
 static char time_h2[] = "00XX";
 
-static void weather_animate_update(Layer *me, GContext *ctx) 
-{
-  int dots = 3; 
-  int spacer = 15;
-  
-  graphics_context_set_fill_color(ctx, GColorBlack);
+static void weather_animate_update(Layer *me, GContext *ctx) {
+	int dots = 3; 
+	int spacer = 15;
 
-  for (int i=1; i<=dots; i++) {
-    if (i == animation_step) {
-      graphics_fill_circle(ctx, GPoint((i*spacer), 8), 5);
-    } else {
-      graphics_fill_circle(ctx, GPoint((i*spacer), 8), 3);
-    }
-  } 
+	graphics_context_set_fill_color(ctx, GColorBlack);
+
+	for (int i=1; i<=dots; i++) {
+		if (i == animation_step) {
+			graphics_fill_circle(ctx, GPoint((i*spacer), 8), 5);
+		} else {
+			graphics_fill_circle(ctx, GPoint((i*spacer), 8), 3);
+		}
+	}
 }
 
 static void weather_layer_set_icon(WeatherIcon icon, WeatherDisplayArea area) 
