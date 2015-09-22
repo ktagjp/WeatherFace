@@ -278,7 +278,7 @@ var fetchWunderWeather = function(latitude, longitude) {
 	options.url = 'http://api.wunderground.com/api/'+Global.wuApiKey+'/astronomy/conditions/q/'+latitude+','+longitude+'.json';
 
 	options.parse = function(response) {
-		tz_offset = (parseInt(response.current_observation.local_tz_offset) / 100) * 32400;
+		tz_offset = (parseInt(response.current_observation.local_tz_offset) / 100) * 3600;
 		unixtime = parseInt(response.current_observation.observation_epoch) + tz_offset;
 		date = new Date(unixtime * 1000);
 		year = date.getFullYear();
@@ -289,13 +289,13 @@ var fetchWunderWeather = function(latitude, longitude) {
 		hour = (hour.length === 1) ? '0' + hour : hour;
 		min  = response.sun_phase.sunrise.minute;
 		min  = (min.length === 1) ? '0' + min : min;
-		sunrise = Math.floor( new Date(year + "/" + month + "/" + day + ' ' + hour + ":" + min + ":" + "00").getTime() / 1000 ) - tz_offset;
+		sunrise = Math.floor( new Date(year + "/" + month + "/" + day + ' ' + hour + ":" + min + ":" + "00").getTime() / 1000 );
 
 		hour = response.sun_phase.sunset.hour;
 		hour = (hour.length === 1) ? '0' + hour : hour;
 		min  = response.sun_phase.sunset.minute;
 		min  = (min.length === 1) ? '0' + min : min;
-		sunset = Math.floor( new Date(year + "/" + month + "/" + day + ' ' + hour + ":" + min + ":" + "00").getTime() / 1000 ) - tz_offset;
+		sunset = Math.floor( new Date(year + "/" + month + "/" + day + ' ' + hour + ":" + min + ":" + "00").getTime() / 1000 );
 
 		pubdate   = new Date(parseInt(response.current_observation.observation_epoch) * 1000);
 
