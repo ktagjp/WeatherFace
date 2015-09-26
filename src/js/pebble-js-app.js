@@ -1,6 +1,9 @@
 var SERVICE_OPEN_WEATHER    = "open";
 var SERVICE_YAHOO_WEATHER   = "yahoo";
 var SERVICE_WUNDER_WEATHER  = "wundr";		///// Add WeatherUnderground for Current Weather Conditions
+var COLOR_DUKEBLUE			= "duke";
+var COLOR_BLACK		   		= "black";
+var COLOR_CLEAR				= "clear";		///// Add Background Color value
 var EXTERNAL_DEBUG_URL    = '';
 var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/';    //////// Change URL to my Github page //////
 
@@ -17,6 +20,7 @@ var Global = {
   config: {
     debugEnabled:   false,
     batteryEnabled: true,
+    backColor: 		COLOR_DUKEBLUE,
     weatherService: SERVICE_YAHOO_WEATHER,
     weatherScale:   'F'
   },
@@ -51,10 +55,13 @@ Pebble.addEventListener("ready", function(e) {
 
 Pebble.addEventListener("appmessage", function(data) {
     console.log("Got a message - Starting weather request ... " + JSON.stringify(data));
-    try {
-		Global.config.weatherService =    (data.payload.service === SERVICE_OPEN_WEATHER) ?  SERVICE_OPEN_WEATHER		///// Add WeatherUnderground for Current Weather Conditions
+    try {																				///// Add WeatherUnderground for Current Weather Conditions
+		Global.config.weatherService =    (data.payload.service === SERVICE_OPEN_WEATHER) ?  SERVICE_OPEN_WEATHER
 										: (data.payload.service === SERVICE_YAHOO_WEATHER) ? SERVICE_YAHOO_WEATHER
 										: SERVICE_WUNDER_WEATHER;
+		Global.config.backColor =		  (data.payload.color === COLOR_DUKEBLUE) ?  COLOR_DUKEBLUE
+										: (data.payload.color === COLOR_BLACK) ? COLOR_BLACK
+										: COLOR_CLEAR;
 		Global.config.debugEnabled   =  data.payload.debug   === 1;
 		Global.config.batteryEnabled =  data.payload.battery === 1;
 		Global.config.weatherScale   = (data.payload.scale   === 'C') ? 'C' : 'F';
@@ -72,6 +79,7 @@ Pebble.addEventListener("appmessage", function(data) {
 Pebble.addEventListener("showConfiguration", function (e) {
     var options = {
       's': Global.config.weatherService,
+      'c': Global.config.backColor,
       'd': Global.config.debugEnabled,
       'u': Global.config.weatherScale,
       'b': Global.config.batteryEnabled ? 'on' : 'off',
@@ -98,12 +106,16 @@ Pebble.addEventListener("webviewclosed", function(e) {
         console.log("Settings received: "+JSON.stringify(settings));
 
         var refreshNeeded = (settings.service  !== Global.config.weatherService ||
-                             settings.scale    !== Global.config.weatherScale   || 
+                             settings.color    !== Global.config.backColor      ||
+                             settings.scale    !== Global.config.weatherScale   ||
                              settings.wuApiKey !== Global.wuApiKey);
-
+																		///// Add WeatherUnderground for Current Weather Conditions
         Global.config.weatherService =    (settings.service === SERVICE_OPEN_WEATHER)  ? SERVICE_OPEN_WEATHER
 										: (settings.service === SERVICE_YAHOO_WEATHER) ? SERVICE_YAHOO_WEATHER
-										: SERVICE_WUNDER_WEATHER;													///// Add WeatherUnderground for Current Weather Conditions
+										: SERVICE_WUNDER_WEATHER;
+        Global.config.backColor =		  (settings.color === COLOR_DUKEBLUE)  ? COLOR_DUKEBLUE
+										: (settings.color === COLOR_BLACK) ? COLOR_BLACK
+										: COLOR_CLEAR;
         Global.config.weatherScale   = settings.scale   === 'C' ? 'C' : 'F';
         Global.config.debugEnabled   = settings.debug   === 'true';
         Global.config.batteryEnabled = settings.battery === 'on';
@@ -117,6 +129,7 @@ Pebble.addEventListener("webviewclosed", function(e) {
         
 		var config = {
 			service: Global.config.weatherService,
+			color:   Global.config.backColor,
 			scale:   Global.config.weatherScale,
 			debug:   Global.config.debugEnabled   ? 1 : 0,
 			battery: Global.config.batteryEnabled ? 1 : 0
