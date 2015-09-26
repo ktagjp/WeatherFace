@@ -9,25 +9,33 @@
     
 <STYLE> #apikey { display: none;} </STYLE>
      
-<SCRIPT src="WeatherFaceConfiguration.files/jquery.min.js"></SCRIPT>
-     
-<SCRIPT src="WeatherFaceConfiguration.files/jquery.mobile.min.js"></SCRIPT>
- 
 <META name="GENERATOR" content="MSHTML 11.00.9600.17937"></HEAD> 
 
 <BODY>
 	<DIV id="main" data-role="page">
 		<DIV class="ui-body ui-body-a" data-role="content">
-			<DIV data-role="fieldcontain">
 
+			<DIV data-role="fieldcontain">
 				<FIELDSET data-role="controlgroup" data-mini="true">
 					<LEGEND>Weather Provider:</LEGEND>
 					<INPUT name="weather-service" class="custom" id="radioyahoo"   type="radio" value="yahoo">
 						<LABEL for="radioyahoo">YAHOO! Weather</LABEL>
 					<INPUT name="weather-service" class="custom" id="radioopen"    type="radio" value="open">
 						<LABEL for="radioopen">Open Weather Map</LABEL>
-					<INPUT name="weather-service" class="custom" id="radiowunder"  type="radio" value="wunder">
-						<LABEL for="radiowunder">Weather Underground</LABEL>
+					<INPUT name="weather-service" class="custom" id="radiowundr"  type="radio" value="wundr">
+						<LABEL for="radiowundr">Weather Undergroundp</LABEL>
+				</FIELDSET>
+			</DIV>
+
+			<DIV data-role="fieldcontain">
+				<FIELDSET data-role="controlgroup" data-mini="true">
+					<LEGEND>Background color:</LEGEND>
+					<INPUT name="bg-color" class="custom" id="radioduke"   type="radio" value="duke">
+						<LABEL for="radioduke">Duke Blue</LABEL>
+					<INPUT name="bg-color" class="custom" id="radioblack"    type="radio" value="black">
+						<LABEL for="radioblack">Black</LABEL>
+					<INPUT name="bg-color" class="custom" id="radioclear"  type="radio" value="clear">
+						<LABEL for="radioclear">Weather Undergroundp</LABEL>
 				</FIELDSET>
 			</DIV>
 
@@ -96,7 +104,8 @@
 	<SCRIPT>
 		function saveOptions() {
 			return {
-				'service': $("#radioyahoo").is(':checked') ? 'yahoo' : $("#radioopen").is(':checked') ? 'open' : 'wunder',
+				'service': $("#radioyahoo").is(':checked') ? 'yahoo' : $("#radioopen").is(':checked') ? 'open' : 'wundr',
+				'color':   $("#radioduke").is(':checked') ? 'duke' : $("#radioblack").is(':checked') ? 'black' : 'clear',
 				'scale':   $("#radioF").is(':checked')     ? 'F' : 'C',				
 				'battery': $("select[name=flipbattery]").prop('selectedIndex') ? 'on' : 'off',
 				'debug':   $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
@@ -137,10 +146,22 @@
 			} else if (service === 'yahoo') {
 				$("#radioyahoo").attr("checked", "checked");
 			} else {
-				$("#radiowunder").attr("checked", "checked");
+				$("#radiowundr").attr("checked", "checked");
 			}
 
 			$("input[name='weather-service']").checkboxradio("refresh");
+
+			var color = getURLParameter('c');
+
+			if (color === 'duke') {
+				$("#radioduke").attr("checked", "checked");
+			} else if (color === 'black') {
+				$("#radioblack").attr("checked", "checked");
+			} else {
+				$("#radioclear").attr("checked", "checked");
+			}
+
+			$("input[name='bg-color']").checkboxradio("refresh");
 
 			var scale = getURLParameter('u');
 
