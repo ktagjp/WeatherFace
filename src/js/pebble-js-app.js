@@ -2,8 +2,8 @@ var SERVICE_OPEN_WEATHER    = "open";
 var SERVICE_YAHOO_WEATHER   = "yahoo";
 var SERVICE_WUNDER_WEATHER  = "wundr";		///// Add WeatherUnderground for Current Weather Conditions
 var COLOR_DUKEBLUE			= "duke";
-var COLOR_BLACK		   		= "black";
-var COLOR_CLEAR				= "clear";		///// Add Background Color value
+var COLOR_BLACK				= "black";
+var COLOR_RED				= "red";		///// Add Background Color value
 var EXTERNAL_DEBUG_URL    = '';
 var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/';    //////// Change URL to my Github page //////
 
@@ -20,7 +20,7 @@ var Global = {
   config: {
     debugEnabled:   false,
     batteryEnabled: true,
-    backColor: 		COLOR_DUKEBLUE,
+	backColor:		COLOR_DUKEBLUE,
     weatherService: SERVICE_YAHOO_WEATHER,
     weatherScale:   'F'
   },
@@ -61,7 +61,7 @@ Pebble.addEventListener("appmessage", function(data) {
 										: SERVICE_WUNDER_WEATHER;
 		Global.config.backColor =		  (data.payload.color === COLOR_DUKEBLUE) ?  COLOR_DUKEBLUE
 										: (data.payload.color === COLOR_BLACK) ? COLOR_BLACK
-										: COLOR_CLEAR;
+										: COLOR_RED;
 		Global.config.debugEnabled   =  data.payload.debug   === 1;
 		Global.config.batteryEnabled =  data.payload.battery === 1;
 		Global.config.weatherScale   = (data.payload.scale   === 'C') ? 'C' : 'F';
@@ -115,7 +115,7 @@ Pebble.addEventListener("webviewclosed", function(e) {
 										: SERVICE_WUNDER_WEATHER;
         Global.config.backColor =		  (settings.color === COLOR_DUKEBLUE)  ? COLOR_DUKEBLUE
 										: (settings.color === COLOR_BLACK) ? COLOR_BLACK
-										: COLOR_CLEAR;
+										: COLOR_RED;
         Global.config.weatherScale   = settings.scale   === 'C' ? 'C' : 'F';
         Global.config.debugEnabled   = settings.debug   === 'true';
         Global.config.batteryEnabled = settings.battery === 'on';

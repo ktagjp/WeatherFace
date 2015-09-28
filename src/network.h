@@ -1,3 +1,6 @@
+#ifndef NETWORK_H
+#define NETWORK_H
+
 #include <pebble.h>
 
 #define KEY_TEMPERATURE 0
@@ -7,6 +10,7 @@
 #define KEY_PUB_DATE 4
 #define KEY_ERROR 5
 #define KEY_SERVICE 6
+#define KEY_COLOR 22
 #define KEY_LOCALE 7
 #define KEY_DEBUG 8
 #define KEY_JS_READY 9
@@ -26,6 +30,9 @@
 #define SERVICE_OPEN_WEATHER "open"
 #define SERVICE_YAHOO_WEATHER "yahoo"
 #define SERVICE_WUNDER_WEATHER "wundr"
+#define COLOR_DUKEBLUE "duke"
+#define COLOR_BLACK "black"
+#define COLOR_RED "red"
 #define SCALE_FAHRENHEIT "F"
 #define SCALE_CELSIUS "C"
 
@@ -46,6 +53,7 @@ typedef struct {
   char locale[255];
   
   char service[6];
+  char color[6];
   char scale[2];
   bool debug;
   bool battery;
@@ -69,3 +77,5 @@ typedef struct {
 void init_network(WeatherData *weather_data);
 void close_network();
 void request_weather(WeatherData *weather_data);
+
+#endif

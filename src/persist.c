@@ -10,7 +10,7 @@
 void load_persisted_values(WeatherData *weather_data) 
 {
   // Debug
-  weather_data->debug = persist_exists(KEY_DEBUG_MODE) ? persist_read_bool(KEY_DEBUG_MODE) : DEFAULT_DEBUG_MODE; 
+  weather_data->debug = persist_exists(KEY_DEBUG_MODE) ? persist_read_bool(KEY_DEBUG_MODE) : DEFAULT_DEBUG_MODE;
 
   if (weather_data->debug) {
     debug_enable_display();
@@ -35,6 +35,13 @@ void load_persisted_values(WeatherData *weather_data)
     strcpy(weather_data->service, DEFAULT_WEATHER_SERVICE);
   }
 
+  // Watchface Color
+  if (persist_exists(KEY_FACE_COLOR)) {
+    persist_read_string(KEY_FACE_COLOR, weather_data->color, sizeof(weather_data->color));
+  } else {
+    strcpy(weather_data->color, DEFAULT_FACE_COLOR);
+  }
+
   // Weather Scale
   if (persist_exists(KEY_WEATHER_SCALE)) {
     persist_read_string(KEY_WEATHER_SCALE, weather_data->scale, sizeof(weather_data->scale));
@@ -42,8 +49,8 @@ void load_persisted_values(WeatherData *weather_data)
     strcpy(weather_data->scale, DEFAULT_WEATHER_SCALE);
   }
 
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "PersistLoad:  d:%d b:%d s:%s u:%s", 
-      weather_data->debug, weather_data->battery, weather_data->service, weather_data->scale);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "PersistLoad:  d:%d b:%d s:%s c:%s u:%s", 
+      weather_data->debug, weather_data->battery, weather_data->service, weather_data->color, weather_data->scale);
 }
 
 void store_persisted_values(WeatherData *weather_data) 
@@ -51,9 +58,10 @@ void store_persisted_values(WeatherData *weather_data)
   persist_write_bool(KEY_DEBUG_MODE, weather_data->debug);
   persist_write_bool(KEY_DISPLAY_BATTERY, weather_data->battery);
   persist_write_string(KEY_WEATHER_SERVICE, weather_data->service);
+  persist_write_string(KEY_FACE_COLOR, weather_data->color);
   persist_write_string(KEY_WEATHER_SCALE, weather_data->scale);
 
 
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "PersistStore:  d:%d b:%d s:%s u:%s", 
-      weather_data->debug, weather_data->battery, weather_data->service, weather_data->scale);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "PersistStore:  d:%d b:%d s:%s c:%s u:%s", 
+      weather_data->debug, weather_data->battery, weather_data->service, weather_data->color, weather_data->scale);
 }

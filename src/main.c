@@ -1,7 +1,7 @@
 #include <pebble.h>
 #include "main.h"
-#include "bluetooth.h"
 #include "network.h"
+#include "bluetooth.h"
 #include "persist.h"
 #include "weather_layer.h"
 #include "debug_layer.h"
@@ -19,26 +19,39 @@
 static WeatherData *weather_data;
 
 /* Global variables to keep track of the UI elements */
-static Window *window;
+Window *window;
 
 /* Need to wait for JS to be ready */
 const  int  MAX_JS_READY_WAIT = 5000; // 5s
 static bool initial_request = true;
 static AppTimer *initial_jsready_timer;
 
-static void handle_tick(struct tm *tick_time, TimeUnits units_changed)
-{
-  if (units_changed & MINUTE_UNIT) {
-    time_layer_update();
-    if (!initial_request) {
-      debug_update_weather(weather_data);
-      weather_layer_update(weather_data);
-    }
-  }
+void face_color_update(WeatherData *weather_data, Window *win) {
 
-  if (units_changed & DAY_UNIT) {
-    date_layer_update(tick_time);
-  }
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Color [main.c] : %s", weather_data->color);
+
+	if (strcmp(weather_data->color, COLOR_DUKEBLUE) == 0) {
+		window_set_background_color(win, GColorDukeBlue);
+	} else if (strcmp(weather_data->color, COLOR_BLACK) == 0) {
+		window_set_background_color(win, GColorBlack);
+	} else {
+		window_set_background_color(win, GColorRed);
+	}
+}
+
+static void handle_tick(struct tm *tick_time, TimeUnits units_changed) {
+	if (units_changed & MINUTE_UNIT) {
+		time_layer_update();
+		if (!initial_request) {
+			debug_update_weather(weather_data);
+			weather_layer_update(weather_data);
+			face_color_update(weather_data, window);
+		}
+	}
+
+	if (units_changed & DAY_UNIT) {
+		date_layer_update(tick_time);
+	}
 
   /*
    * Useful for showing all icons using Yahoo, subscribe to SECOND_UNIT tick service
@@ -57,13 +70,12 @@ static void handle_tick(struct tm *tick_time, TimeUnits units_changed)
   weather_layer_update(weather_data);
   */
 
-  // Refresh the weather info every 30 mins, targeting 18 mins after the hour (Yahoo updates around then)
-  if ((units_changed & MINUTE_UNIT) && 
-//      (tick_time->tm_min % 30 == 18) &&
-      (tick_time->tm_min % 5 == 0) &&			// Change weather refreshing interval as every 5 minutes from 30 minutes.
-      !initial_request) {
-    request_weather(weather_data);
-  }
+	// Refresh the weather info every 30 mins, targeting 18 mins after the hour (Yahoo updates around then)
+	if ((units_changed & MINUTE_UNIT) && (tick_time->tm_min % 5 == 0) && !initial_request) {
+	//                                   (tick_time->tm_min % 30 == 18) &&
+					                    // Change weather refreshing interval as every 5 minute from 30 minutes.
+		request_weather(weather_data);
+	}
 } 
 
 /**
@@ -86,8 +98,6 @@ static void init(void)
 
   window = window_create();
   window_stack_push(window, true /* Animated */);
-  window_set_background_color(window, GColorDukeBlue);  ///////// Change Color to GColorDukeBlue from GColorBlack for Watchface Upper Color ///////
-
   weather_data = malloc(sizeof(WeatherData));
   init_network(weather_data);
 

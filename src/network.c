@@ -10,141 +10,146 @@ const  int MAX_RETRY = 2;
 static int retry_count = 0;
 
 static void appmsg_in_received(DictionaryIterator *received, void *context) {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "In received.");
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "In received.");
 
-  WeatherData *weather = (WeatherData*) context;
+	WeatherData *weather = (WeatherData*) context;
 
-  // Program Control
-  Tuple *error_tuple       = dict_find(received, KEY_ERROR);
-  Tuple *js_ready_tuple    = dict_find(received, KEY_JS_READY);
+	// Program Control
+	Tuple *error_tuple       = dict_find(received, KEY_ERROR);
+	Tuple *js_ready_tuple    = dict_find(received, KEY_JS_READY);
 
-  // Current Weather (Via Yahoo, Open Weather Map)
-  Tuple *temperature_tuple = dict_find(received, KEY_TEMPERATURE);
-  Tuple *condition_tuple   = dict_find(received, KEY_CONDITION);
-  Tuple *sunrise_tuple     = dict_find(received, KEY_SUNRISE);
-  Tuple *sunset_tuple      = dict_find(received, KEY_SUNSET);
-  Tuple *pub_date_tuple    = dict_find(received, KEY_PUB_DATE);
-  Tuple *locale_tuple      = dict_find(received, KEY_LOCALE);
-  Tuple *tzoffset_tuple    = dict_find(received, KEY_TZOFFSET);
+	// Current Weather (Via Yahoo, Open Weather Map)
+	Tuple *temperature_tuple = dict_find(received, KEY_TEMPERATURE);
+	Tuple *condition_tuple   = dict_find(received, KEY_CONDITION);
+	Tuple *sunrise_tuple     = dict_find(received, KEY_SUNRISE);
+	Tuple *sunset_tuple      = dict_find(received, KEY_SUNSET);
+	Tuple *pub_date_tuple    = dict_find(received, KEY_PUB_DATE);
+	Tuple *locale_tuple      = dict_find(received, KEY_LOCALE);
+	Tuple *tzoffset_tuple    = dict_find(received, KEY_TZOFFSET);
 
-  // Configuration Settings
-  Tuple *service_tuple     = dict_find(received, KEY_SERVICE);
-  Tuple *debug_tuple       = dict_find(received, KEY_DEBUG);
-  Tuple *scale_tuple       = dict_find(received, KEY_SCALE);
-  Tuple *battery_tuple     = dict_find(received, KEY_BATTERY);
+	// Configuration Settings
+	Tuple *service_tuple     = dict_find(received, KEY_SERVICE);
+	Tuple *color_tuple       = dict_find(received, KEY_COLOR);
+	Tuple *debug_tuple       = dict_find(received, KEY_DEBUG);
+	Tuple *scale_tuple       = dict_find(received, KEY_SCALE);
+	Tuple *battery_tuple     = dict_find(received, KEY_BATTERY);
 
-  // Hourly Weather
-  Tuple *h1_temp_tuple = dict_find(received, KEY_H1_TEMP);
-  Tuple *h1_cond_tuple = dict_find(received, KEY_H1_COND);
-  Tuple *h1_time_tuple = dict_find(received, KEY_H1_TIME);
-  Tuple *h1_pop_tuple  = dict_find(received, KEY_H1_POP);
-  Tuple *h2_temp_tuple = dict_find(received, KEY_H2_TEMP);
-  Tuple *h2_cond_tuple = dict_find(received, KEY_H2_COND);
-  Tuple *h2_time_tuple = dict_find(received, KEY_H2_TIME);
-  Tuple *h2_pop_tuple  = dict_find(received, KEY_H2_POP);
+	// Hourly Weather
+	Tuple *h1_temp_tuple = dict_find(received, KEY_H1_TEMP);
+	Tuple *h1_cond_tuple = dict_find(received, KEY_H1_COND);
+	Tuple *h1_time_tuple = dict_find(received, KEY_H1_TIME);
+	Tuple *h1_pop_tuple  = dict_find(received, KEY_H1_POP);
+	Tuple *h2_temp_tuple = dict_find(received, KEY_H2_TEMP);
+	Tuple *h2_cond_tuple = dict_find(received, KEY_H2_COND);
+	Tuple *h2_time_tuple = dict_find(received, KEY_H2_TIME);
+	Tuple *h2_pop_tuple  = dict_find(received, KEY_H2_POP);
 
-  Tuple *hourly_enabled_tuple = dict_find(received, KEY_HOURLY_ENABLED);
+	Tuple *hourly_enabled_tuple = dict_find(received, KEY_HOURLY_ENABLED);
 
-  // Weather update
-  if (temperature_tuple && condition_tuple) {
-    weather->temperature = temperature_tuple->value->int32;
-    weather->condition   = condition_tuple->value->int32;
-    weather->sunrise     = sunrise_tuple->value->int32;
-    weather->sunset      = sunset_tuple->value->int32;
-    weather->error       = WEATHER_E_OK;
-    weather->tzoffset    = tzoffset_tuple->value->int32;
+	// Weather update
+	if (temperature_tuple && condition_tuple) {
+		weather->temperature = temperature_tuple->value->int32;
+		weather->condition   = condition_tuple->value->int32;
+		weather->sunrise     = sunrise_tuple->value->int32;
+		weather->sunset      = sunset_tuple->value->int32;
+		weather->error       = WEATHER_E_OK;
+		weather->tzoffset    = tzoffset_tuple->value->int32;
 
-    weather->updated = time(NULL);
+		weather->updated = time(NULL);
 
-    strncpy(weather->pub_date, pub_date_tuple->value->cstring, 6);
-    strncpy(weather->locale, locale_tuple->value->cstring, 255);
+		strncpy(weather->pub_date, pub_date_tuple->value->cstring, 6);
+		strncpy(weather->locale, locale_tuple->value->cstring, 255);
 
-    if (weather->debug) {
-      debug_enable_display();
-      debug_update_weather(weather);
-    }
-   
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Weather temp:%i cond:%i pd:%s tzos:%i loc:%s", 
-      weather->temperature, weather->condition, weather->pub_date, weather->tzoffset, weather->locale);
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Weather sunrise:%i sunset:%i", weather->sunrise, weather->sunset);
-  }
-  // Configuration Update
-  else if (service_tuple) {
-    char* service =   strcmp(service_tuple->value->cstring, SERVICE_OPEN_WEATHER) == 0 ? SERVICE_OPEN_WEATHER
-					: strcmp(service_tuple->value->cstring, SERVICE_YAHOO_WEATHER) == 0 ? SERVICE_YAHOO_WEATHER
-					: SERVICE_WUNDER_WEATHER;
-    char* scale   = strcmp(scale_tuple->value->cstring, SCALE_CELSIUS) == 0 ? SCALE_CELSIUS : SCALE_FAHRENHEIT;
-    strncpy(weather->service, service, 6);
-    strncpy(weather->scale, scale, 2);
+		if (weather->debug) {
+			debug_enable_display();
+			debug_update_weather(weather);
+		}
 
-    weather->debug   = (bool)debug_tuple->value->int32;
-    weather->battery = (bool)battery_tuple->value->int32;
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Weather temp:%i cond:%i pd:%s tzos:%i loc:%s", 
+			weather->temperature, weather->condition, weather->pub_date, weather->tzoffset, weather->locale);
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Weather sunrise:%i sunset:%i", weather->sunrise, weather->sunset);
+	}
+	// Configuration Update
+	else if (service_tuple) {
+		char* service =   strcmp(service_tuple->value->cstring, SERVICE_OPEN_WEATHER) == 0 ? SERVICE_OPEN_WEATHER
+						: strcmp(service_tuple->value->cstring, SERVICE_YAHOO_WEATHER) == 0 ? SERVICE_YAHOO_WEATHER
+						: SERVICE_WUNDER_WEATHER;
+		char* color   =   strcmp(color_tuple->value->cstring, COLOR_DUKEBLUE) == 0 ? COLOR_DUKEBLUE
+						: strcmp(color_tuple->value->cstring, COLOR_BLACK) == 0 ? COLOR_BLACK
+						: COLOR_RED;
+		char* scale   = strcmp(scale_tuple->value->cstring, SCALE_CELSIUS) == 0 ? SCALE_CELSIUS : SCALE_FAHRENHEIT;
+		strncpy(weather->service, service, 6);
+		strncpy(weather->color, color, 6);
+		strncpy(weather->scale, scale, 2);
 
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Configuration serv:%s scale:%s debug:%i batt:%i", 
-      weather->service, weather->scale, weather->debug, weather->battery);
+		weather->debug   = (bool)debug_tuple->value->int32;
+		weather->battery = (bool)battery_tuple->value->int32;
 
-    if (weather->battery) {
-      battery_enable_display();
-    } else {
-      battery_disable_display();
-    }
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Configuration serv:%s color:%s scale:%s debug:%i batt:%i", 
+			weather->service, weather->color, weather->scale, weather->debug, weather->battery);
 
-    if (weather->debug) {
-      debug_enable_display();
-      debug_update_weather(weather);
-    } else {
-      debug_disable_display();
-    }
+		if (weather->battery) {
+			battery_enable_display();
+		} else {
+			battery_disable_display();
+		}
 
-    store_persisted_values(weather);
-  }
-  // Hourly Weather Update
-  else if (h1_temp_tuple) {
-    
-    weather->h1_temp = h1_temp_tuple->value->int32;
-    weather->h1_cond = h1_cond_tuple->value->int32;
-    time_t h1_time   = h1_time_tuple->value->int32;
-    struct tm *h1_tm = localtime(&h1_time);
-    weather->h1_time = mktime(h1_tm);
-    weather->h1_pop  = h1_pop_tuple->value->int32;
-    weather->h2_temp = h2_temp_tuple->value->int32;
-    weather->h2_cond = h2_cond_tuple->value->int32;
-    time_t h2_time = h2_time_tuple->value->int32;
-    struct tm *h2_tm = localtime(&h2_time);
-    weather->h2_time = mktime(h2_tm);
-    weather->h2_pop  = h2_pop_tuple->value->int32;
+		if (weather->debug) {
+			debug_enable_display();
+			debug_update_weather(weather);
+		} else {
+			debug_disable_display();
+		}
 
-    weather->hourly_enabled = true;
-    weather->hourly_updated = time(NULL);
-  }
-  // Initial Javascript Ready message
-  else if (js_ready_tuple) {
-    weather->js_ready = true;
-    weather->error    = WEATHER_E_OK;
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Javascript is ready");
-    debug_update_message("JS ready");
-    initial_jsready_callback();
-  }
-  // Hourly enabled
-  else if (hourly_enabled_tuple) {
-    weather->hourly_enabled = (bool)hourly_enabled_tuple->value->int32;
-    weather->hourly_updated = time(NULL);
+		store_persisted_values(weather);
+	}
+	// Hourly Weather Update
+	else if (h1_temp_tuple) {
 
-  }
-  else if (error_tuple) {
-    weather->error   = WEATHER_E_NETWORK;
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Error: %s", error_tuple->value->cstring);
-  }
-  else {
-    weather->error = WEATHER_E_PHONE;
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Message with unknown keys: t=%p c=%p e=%p",
-      temperature_tuple, condition_tuple, error_tuple);
-  }
+		weather->h1_temp = h1_temp_tuple->value->int32;
+		weather->h1_cond = h1_cond_tuple->value->int32;
+		time_t h1_time   = h1_time_tuple->value->int32;
+		struct tm *h1_tm = localtime(&h1_time);
+		weather->h1_time = mktime(h1_tm);
+		weather->h1_pop  = h1_pop_tuple->value->int32;
+		weather->h2_temp = h2_temp_tuple->value->int32;
+		weather->h2_cond = h2_cond_tuple->value->int32;
+		time_t h2_time = h2_time_tuple->value->int32;
+		struct tm *h2_tm = localtime(&h2_time);
+		weather->h2_time = mktime(h2_tm);
+		weather->h2_pop  = h2_pop_tuple->value->int32;
 
-  weather_layer_update(weather);
+		weather->hourly_enabled = true;
+		weather->hourly_updated = time(NULL);
+	}
+	// Initial Javascript Ready message
+	else if (js_ready_tuple) {
+		weather->js_ready = true;
+		weather->error    = WEATHER_E_OK;
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Javascript is ready");
+		debug_update_message("JS ready");
+		initial_jsready_callback();
+	}
+	// Hourly enabled
+	else if (hourly_enabled_tuple) {
+		weather->hourly_enabled = (bool)hourly_enabled_tuple->value->int32;
+		weather->hourly_updated = time(NULL);
+	}
+	else if (error_tuple) {
+		weather->error   = WEATHER_E_NETWORK;
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Error: %s", error_tuple->value->cstring);
+	}
+	else {
+		weather->error = WEATHER_E_PHONE;
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Message with unknown keys: t=%p c=%p e=%p",
+		temperature_tuple, condition_tuple, error_tuple);
+	}
 
-  // Success! reset the retry count...
-  retry_count = 0;
+	weather_layer_update(weather);
+	face_color_update(weather, window);
+
+	// Success! reset the retry count...
+	retry_count = 0;
 }
 
 static char *translate_error(AppMessageResult result) 
@@ -253,6 +258,7 @@ void request_weather(WeatherData *weather_data)
   }
 
   dict_write_cstring(iter, KEY_SERVICE, weather_data->service);
+  dict_write_cstring(iter, KEY_COLOR, weather_data->color);
   dict_write_cstring(iter, KEY_SCALE, weather_data->scale);
   dict_write_uint8(iter, KEY_DEBUG, (uint8_t)weather_data->debug);
   dict_write_uint8(iter, KEY_BATTERY, (uint8_t)weather_data->battery);
