@@ -38,8 +38,8 @@
 						<LABEL for="radioduke">Duke Blue</LABEL>
 					<INPUT name="bg-color" class="custom" id="radioblack"    type="radio" value="black">
 						<LABEL for="radioblack">Black</LABEL>
-					<INPUT name="bg-color" class="custom" id="radioclear"  type="radio" value="clear">
-						<LABEL for="radioclear">Clear</LABEL>
+					<INPUT name="bg-color" class="custom" id="radiored"  type="radio" value="red">
+						<LABEL for="radiored">Red</LABEL>
 				</FIELDSET>
 			</DIV>
 
@@ -109,7 +109,7 @@
 		function saveOptions() {
 			return {
 				'service': $("#radioyahoo").is(':checked') ? 'yahoo' : $("#radioopen").is(':checked') ? 'open' : 'wundr',
-				'color':   $("#radioduke").is(':checked') ? 'duke' : $("#radioblack").is(':checked') ? 'black' : 'clear',
+				'color':   $("#radioduke").is(':checked') ? 'duke' : $("#radioblack").is(':checked') ? 'black' : 'red',
 				'scale':   $("#radioF").is(':checked')     ? 'F' : 'C',				
 				'battery': $("select[name=flipbattery]").prop('selectedIndex') ? 'on' : 'off',
 				'debug':   $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
@@ -162,7 +162,7 @@
 			} else if (color === 'black') {
 				$("#radioblack").attr("checked", "checked");
 			} else {
-				$("#radioclear").attr("checked", "checked");
+				$("#radiored").attr("checked", "checked");
 			}
 
 			$("input[name='bg-color']").checkboxradio("refresh");
