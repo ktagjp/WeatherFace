@@ -34,8 +34,10 @@ void face_color_update(WeatherData *weather_data, Window *win) {
 		window_set_background_color(win, GColorDukeBlue);
 	} else if (strcmp(weather_data->color, COLOR_BLACK) == 0) {
 		window_set_background_color(win, GColorBlack);
-	} else {
+	} else if (strcmp(weather_data->color, COLOR_RED) == 0) {
 		window_set_background_color(win, GColorRed);
+	} else {
+		window_set_background_color(win, GColorDarkGray);
 	}
 }
 
@@ -94,65 +96,67 @@ void initial_jsready_callback()
 
 static void init(void) 
 {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "init started");
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "init started");
 
-  window = window_create();
-  window_stack_push(window, true /* Animated */);
-  weather_data = malloc(sizeof(WeatherData));
-  init_network(weather_data);
+	window = window_create();
+	window_stack_push(window, true /* Animated */);
+	weather_data = malloc(sizeof(WeatherData));
+	init_network(weather_data);
+//	window_set_background_color(window, GColorBlack);
+	face_color_update(weather_data, window);
 
-  // Setup our layers
-  time_layer_create(TIME_FRAME, window);
-  date_layer_create(DATE_FRAME, window);
-  weather_layer_create(WEATHER_FRAME, window);
-  debug_layer_create(DEBUG_FRAME, window);
-  battery_layer_create(BATTERY_FRAME, window);
+	// Setup our layers
+	time_layer_create(TIME_FRAME, window);
+	date_layer_create(DATE_FRAME, window);
+	weather_layer_create(WEATHER_FRAME, window);
+	debug_layer_create(DEBUG_FRAME, window);
+	battery_layer_create(BATTERY_FRAME, window);
 
-  load_persisted_values(weather_data);
+	load_persisted_values(weather_data);
 
-  // Setup Bluetooth connection vibration
-  UpdateConnection(bluetooth_connection_service_peek());        //////////// Add to Vibrate on Bluetooth connection / disconnection 
+	// Setup Bluetooth connection vibration
+	UpdateConnection(bluetooth_connection_service_peek());        //////////// Add to Vibrate on Bluetooth connection / disconnection 
 	bluetooth_connection_service_subscribe(UpdateConnection);     //////////// Add to Vibrate on Bluetooth connection / disconnection 
 
-  // Kickoff our weather loading 'dot' animation
-  weather_animate(weather_data);
+	// Kickoff our weather loading 'dot' animation
+	weather_animate(weather_data);
 
-  // Setup a timer incase we miss or don't receive js_ready to manually try ourselves
-  initial_jsready_timer = app_timer_register(MAX_JS_READY_WAIT, initial_jsready_callback, NULL);
+	// Setup a timer incase we miss or don't receive js_ready to manually try ourselves
+	initial_jsready_timer = app_timer_register(MAX_JS_READY_WAIT, initial_jsready_callback, NULL);
 
-  // Update the screen right away
+	// Update the screen right away
 
-  time_t now = time(NULL);
+	time_t now = time(NULL);
 
-  handle_tick(localtime(&now), MINUTE_UNIT | DAY_UNIT );
+	handle_tick(localtime(&now), MINUTE_UNIT | DAY_UNIT );
 
-  // And then every minute
-  tick_timer_service_subscribe(MINUTE_UNIT, handle_tick);
+	// And then every minute
+	tick_timer_service_subscribe(MINUTE_UNIT, handle_tick);
 }
 
 static void deinit(void) 
 {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "deinit started");
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "deinit started");
 
-  tick_timer_service_unsubscribe();
+	tick_timer_service_unsubscribe();
 
-  window_destroy(window);
+	window_destroy(window);
 
-  time_layer_destroy();
-  date_layer_destroy();
-  weather_layer_destroy();
-  debug_layer_destroy();
-  battery_layer_destroy();
+	time_layer_destroy();
+	date_layer_destroy();
+	weather_layer_destroy();
+	debug_layer_destroy();
+	battery_layer_destroy();
 
 	bluetooth_connection_service_unsubscribe();               //////////// Add to Vibrate on Bluetooth connection / disconnection 
 
-  free(weather_data);
+	free(weather_data);
 
-  close_network();
+	close_network();
 }
 
 int main(void) {
-  init();
-  app_event_loop();
-  deinit();
+	init();
+	app_event_loop();
+	deinit();
 }

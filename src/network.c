@@ -234,36 +234,35 @@ void close_network()
   app_message_deregister_callbacks();
 }
 
-void request_weather(WeatherData *weather_data)
-{
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Request weather, retry: %i", retry_count);
+void request_weather(WeatherData *weather_data) {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Request weather, retry: %i", retry_count);
 
-  if (retry_count > MAX_RETRY) {
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Too many retries");
-    retry_count = 0;
-    return;
-  }
+	if (retry_count > MAX_RETRY) {
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Too many retries");
+		retry_count = 0;
+		return;
+	}
 
-  if (!bluetooth_connection_service_peek()) {
-    weather_data->error = WEATHER_E_DISCONNECTED;
-    return;
-  }
+	if (!bluetooth_connection_service_peek()) {
+		weather_data->error = WEATHER_E_DISCONNECTED;
+		return;
+	}
 
-  DictionaryIterator *iter;
-  app_message_outbox_begin(&iter);
+	DictionaryIterator *iter;
+	app_message_outbox_begin(&iter);
   
-  if (iter == NULL) {
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Null iter");
-    return;
-  }
+	if (iter == NULL) {
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Null iter");
+		return;
+	}
 
-  dict_write_cstring(iter, KEY_SERVICE, weather_data->service);
-  dict_write_cstring(iter, KEY_COLOR, weather_data->color);
-  dict_write_cstring(iter, KEY_SCALE, weather_data->scale);
-  dict_write_uint8(iter, KEY_DEBUG, (uint8_t)weather_data->debug);
-  dict_write_uint8(iter, KEY_BATTERY, (uint8_t)weather_data->battery);
+	dict_write_cstring(iter, KEY_SERVICE, weather_data->service);
+	dict_write_cstring(iter, KEY_COLOR, weather_data->color);
+	dict_write_cstring(iter, KEY_SCALE, weather_data->scale);
+	dict_write_uint8(iter, KEY_DEBUG, (uint8_t)weather_data->debug);
+	dict_write_uint8(iter, KEY_BATTERY, (uint8_t)weather_data->battery);
 
-  dict_write_end(iter);
+	dict_write_end(iter);
 
-  app_message_outbox_send();
+	app_message_outbox_send();
 }

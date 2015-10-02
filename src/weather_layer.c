@@ -288,11 +288,11 @@ void weather_layer_update(WeatherData *weather_data)
 		weather_layer_set_icon(yahoo_weather_icon_for_condition(weather_data->condition, night_time), AREA_PRIMARY);
 	} else {
 		weather_layer_set_icon(wunder_weather_icon_for_condition(weather_data->condition, night_time), AREA_PRIMARY);
-    }
+	}
 
-    if (weather_data->hourly_updated != 0 && weather_data->hourly_enabled) {
-      time_t h1t = weather_data->h1_time;
-      time_t h2t = weather_data->h2_time;
+	if (weather_data->hourly_updated != 0 && weather_data->hourly_enabled) {
+		time_t h1t = weather_data->h1_time;
+		time_t h2t = weather_data->h2_time;
 //      time_t h1t = weather_data->h1_time - weather_data->tzoffset;      ///////// Change time value for SDK3 by ktagjp
 //      time_t h2t = weather_data->h2_time - weather_data->tzoffset;      ///////// Change time value for SDK3 by ktagjp
       strftime(time_h1, sizeof(time_h1), "%I%p", localtime(&h1t));
