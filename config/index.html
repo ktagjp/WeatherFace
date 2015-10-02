@@ -86,6 +86,14 @@
 			</DIV>
 
 			<DIV data-role="fieldcontain">
+				<LABEL for="flipbluetooth">Bluetooth Connection/Disconnection Alert:</LABEL>  
+				<SELECT name="flipbluetooth" id="flipbluetooth" data-role="slider" data-mini="true">
+					<OPTION value="off">Off</OPTION>
+					<OPTION value="on">On</OPTION>
+				</SELECT>
+			</DIV>
+
+			<DIV data-role="fieldcontain">
 				<LABEL for="flipdebug">Debug Mode:</LABEL>
 			    <SELECT name="flipdebug" id="flipdebug" data-role="slider" data-mini="true">
 					<OPTION value="off">Off</OPTION>
@@ -108,12 +116,13 @@
 	<SCRIPT>
 		function saveOptions() {
 			return {
-				'service': $("#radioyahoo").is(':checked') ? 'yahoo' : $("#radioopen").is(':checked') ? 'open' : 'wundr',
-				'color':   $("#radioduke").is(':checked') ? 'duke' : $("#radioblack").is(':checked') ? 'black' : 'red',
-				'scale':   $("#radioF").is(':checked')     ? 'F' : 'C',				
-				'battery': $("select[name=flipbattery]").prop('selectedIndex') ? 'on' : 'off',
-				'debug':   $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
-				'wuApiKey':$("select[name=fliphourly]").prop('selectedIndex')  ? $("#text-apikey").val() : null
+				'service':   $("#radioyahoo").is(':checked') ? 'yahoo' : $("#radioopen").is(':checked') ? 'open' : 'wundr',
+				'color':     $("#radioduke").is(':checked') ? 'duke' : $("#radioblack").is(':checked') ? 'black' : 'red',
+				'scale':     $("#radioF").is(':checked')     ? 'F' : 'C',
+				'battery':   $("select[name=flipbattery]").prop('selectedIndex') ? 'on' : 'off',
+				'bluetooth': $("select[name=flipbluetooth]").prop('selectedIndex') ? 'on' : 'off',
+				'debug':     $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
+				'wuApiKey':  $("select[name=fliphourly]").prop('selectedIndex')  ? $("#text-apikey").val() : null
 			};
 		}
 
@@ -195,6 +204,15 @@
 				flipBattery.prop('selectedIndex', 0);
 			} else {
 				flipBattery.prop('selectedIndex', 1);
+			}
+
+			var flipBluetooth = $("select[name=flipbluetooth]");
+			var bluetooth = getURLParameter('t');
+
+			if (bluetooth === 'off') {
+				flipBluetooth.prop('selectedIndex', 0);
+			} else {
+				flipBluetooth.prop('selectedIndex', 1);
 			}
 
 			var flipDebug = $("select[name=flipdebug]");
