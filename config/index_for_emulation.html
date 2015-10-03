@@ -6,15 +6,9 @@
 <META charset="utf-8">     
 <META name="viewport" content="width=device-width, initial-scale=1">
 <LINK href="WeatherFaceConfiguration.files/jquery.mobile.min.css" rel="stylesheet"> 
-<<<<<<< HEAD
-    
-<STYLE> #apikey { display: none;} </STYLE>
-     
-=======
 
 <STYLE> #apikey { display: none;} </STYLE>
 
->>>>>>> gh-pages
 <SCRIPT src="WeatherFaceConfiguration.files/jquery.min.js"></SCRIPT>
 
 <SCRIPT src="WeatherFaceConfiguration.files/jquery.mobile.min.js"></SCRIPT>
@@ -33,11 +27,7 @@
 					<INPUT name="weather-service" class="custom" id="radioopen"    type="radio" value="open">
 						<LABEL for="radioopen">Open Weather Map</LABEL>
 					<INPUT name="weather-service" class="custom" id="radiowundr"  type="radio" value="wundr">
-<<<<<<< HEAD
-						<LABEL for="radiowundr">Weather Undergroundp</LABEL>
-=======
 						<LABEL for="radiowundr">Weather Undergroundp (API KEY required)</LABEL>
->>>>>>> gh-pages
 				</FIELDSET>
 			</DIV>
 
@@ -48,13 +38,8 @@
 						<LABEL for="radioduke">Duke Blue</LABEL>
 					<INPUT name="bg-color" class="custom" id="radioblack"    type="radio" value="black">
 						<LABEL for="radioblack">Black</LABEL>
-<<<<<<< HEAD
-					<INPUT name="bg-color" class="custom" id="radioclear"  type="radio" value="clear">
-						<LABEL for="radioclear">Clear</LABEL>
-=======
 					<INPUT name="bg-color" class="custom" id="radiored"  type="radio" value="red">
 						<LABEL for="radiored">Red</LABEL>
->>>>>>> gh-pages
 				</FIELDSET>
 			</DIV>
 
@@ -101,8 +86,6 @@
 			</DIV>
 
 			<DIV data-role="fieldcontain">
-<<<<<<< HEAD
-=======
 				<LABEL for="flipbluetooth">Bluetooth Connection/Disconnection Alert:</LABEL>  
 				<SELECT name="flipbluetooth" id="flipbluetooth" data-role="slider" data-mini="true">
 					<OPTION value="off">Off</OPTION>
@@ -111,7 +94,6 @@
 			</DIV>
 
 			<DIV data-role="fieldcontain">
->>>>>>> gh-pages
 				<LABEL for="flipdebug">Debug Mode:</LABEL>
 			    <SELECT name="flipdebug" id="flipdebug" data-role="slider" data-mini="true">
 					<OPTION value="off">Off</OPTION>
@@ -134,14 +116,6 @@
 	<SCRIPT>
 		function saveOptions() {
 			return {
-<<<<<<< HEAD
-				'service': $("#radioyahoo").is(':checked') ? 'yahoo' : $("#radioopen").is(':checked') ? 'open' : 'wundr',
-				'color':   $("#radioduke").is(':checked') ? 'duke' : $("#radioblack").is(':checked') ? 'black' : 'clear',
-				'scale':   $("#radioF").is(':checked')     ? 'F' : 'C',				
-				'battery': $("select[name=flipbattery]").prop('selectedIndex') ? 'on' : 'off',
-				'debug':   $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
-				'wuApiKey':$("select[name=fliphourly]").prop('selectedIndex')  ? $("#text-apikey").val() : null
-=======
 				'service':   $("#radioyahoo").is(':checked') ? 'yahoo' : $("#radioopen").is(':checked') ? 'open' : 'wundr',
 				'color':     $("#radioduke").is(':checked') ? 'duke' : $("#radioblack").is(':checked') ? 'black' : 'red',
 				'scale':     $("#radioF").is(':checked')     ? 'F' : 'C',
@@ -149,7 +123,6 @@
 				'bluetooth': $("select[name=flipbluetooth]").prop('selectedIndex') ? 'on' : 'off',
 				'debug':     $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
 				'wuApiKey':  $("select[name=fliphourly]").prop('selectedIndex')  ? $("#text-apikey").val() : null
->>>>>>> gh-pages
 			};
 		}
 
@@ -159,8 +132,6 @@
 			);
 		}
 
-<<<<<<< HEAD
-=======
 		// Get query variables
 		function getQueryParam(variable, defaultValue) {
 			// Find all URL parameters
@@ -178,7 +149,6 @@
 		}
 
 
->>>>>>> gh-pages
 		$().ready(function() {
 
 			var initialLoad = true;
@@ -218,11 +188,7 @@
 			} else if (color === 'black') {
 				$("#radioblack").attr("checked", "checked");
 			} else {
-<<<<<<< HEAD
-				$("#radioclear").attr("checked", "checked");
-=======
 				$("#radiored").attr("checked", "checked");
->>>>>>> gh-pages
 			}
 
 			$("input[name='bg-color']").checkboxradio("refresh");
@@ -257,8 +223,6 @@
 				flipBattery.prop('selectedIndex', 1);
 			}
 
-<<<<<<< HEAD
-=======
 			var flipBluetooth = $("select[name=flipbluetooth]");
 			var bluetooth = getURLParameter('t');
 
@@ -268,7 +232,6 @@
 				flipBluetooth.prop('selectedIndex', 1);
 			}
 
->>>>>>> gh-pages
 			var flipDebug = $("select[name=flipdebug]");
 			var debug = getURLParameter('d');
 
@@ -288,12 +251,8 @@
 			$("#b-submit").click(function() {
 				console.log("Submit");
 
-<<<<<<< HEAD
-				var location = "pebblejs://close#" + (JSON.stringify(saveOptions()));
-=======
 				var returnTo = getQueryParam('return_to', 'pebblejs://close#');
 				var location = returnTo + encodeURIComponent(JSON.stringify(saveOptions()));
->>>>>>> gh-pages
 				console.log("Warping to: " + location);
 				console.log(location);
 				document.location = location;

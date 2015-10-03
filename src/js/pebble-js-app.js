@@ -5,13 +5,21 @@ var COLOR_DUKEBLUE			= "duke";
 var COLOR_BLACK				= "black";
 var COLOR_RED				= "red";		///// Add Background Color value
 var EXTERNAL_DEBUG_URL    = '';
+<<<<<<< HEAD
+var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/';
+=======
 var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/';    //////// Change URL to my Github page //////
+>>>>>>> develop
 
 var Global = {
   externalDebug:     false, // POST logs to external server - dangerous! lat lon recorded
   wuApiKey:          null, // register for a free api key!
   hourlyIndex1:      2, // 3 Hours from now 
+<<<<<<< HEAD
+  hourlyIndex2:      5, // 6 hours from now
+=======
   hourlyIndex2:      5, // 6 hours from now                                  //////// Change to 5 from 8 ////////
+>>>>>>> develop
   updateInProgress:  false,
   updateWaitTimeout: 1 * 60 * 1000, // one minute in ms
   lastUpdateAttempt: new Date(),
