@@ -1,6 +1,7 @@
 {
     "appKeys": {
         "battery": 11,
+        "bluetooth": 23,
         "color": 22,
         "condition": 1,
         "debug": 8,

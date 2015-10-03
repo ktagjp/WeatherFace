@@ -19,6 +19,7 @@ var Global = {
   retryWait:         500, // ms
   config: {
     debugEnabled:   false,
+    bluetoothAlert: true,
     batteryEnabled: true,
 	backColor:		COLOR_DUKEBLUE,
     weatherService: SERVICE_YAHOO_WEATHER,
@@ -63,6 +64,7 @@ Pebble.addEventListener("appmessage", function(data) {
 										: (data.payload.color === COLOR_BLACK) ? COLOR_BLACK
 										: COLOR_RED;
 		Global.config.debugEnabled   =  data.payload.debug   === 1;
+		Global.config.bluetoothAlert =  data.payload.bluetooth === 1;
 		Global.config.batteryEnabled =  data.payload.battery === 1;
 		Global.config.weatherScale   = (data.payload.scale   === 'C') ? 'C' : 'F';
 		Global.wuApiKey              =  window.localStorage.getItem('wuApiKey');
@@ -83,6 +85,7 @@ Pebble.addEventListener("showConfiguration", function (e) {
       'd': Global.config.debugEnabled,
       'u': Global.config.weatherScale,
       'b': Global.config.batteryEnabled ? 'on' : 'off',
+      't': Global.config.bluetoothAlert ? 'on' : 'off',
       'a': Global.wuApiKey
     };
     var url = CONFIGURATION_URL+'?'+serialize(options);
@@ -118,6 +121,7 @@ Pebble.addEventListener("webviewclosed", function(e) {
 										: COLOR_RED;
         Global.config.weatherScale   = settings.scale   === 'C' ? 'C' : 'F';
         Global.config.debugEnabled   = settings.debug   === 'true';
+        Global.config.bluetoothAlert = settings.bluetooth === 'on';
         Global.config.batteryEnabled = settings.battery === 'on';
         Global.wuApiKey              = settings.wuApiKey;
 
@@ -128,11 +132,12 @@ Pebble.addEventListener("webviewclosed", function(e) {
 		}
         
 		var config = {
-			service: Global.config.weatherService,
-			color:   Global.config.backColor,
-			scale:   Global.config.weatherScale,
-			debug:   Global.config.debugEnabled   ? 1 : 0,
-			battery: Global.config.batteryEnabled ? 1 : 0
+			service:   Global.config.weatherService,
+			color:     Global.config.backColor,
+			scale:     Global.config.weatherScale,
+			debug:     Global.config.debugEnabled   ? 1 : 0,
+			bluetooth: Global.config.bluetoothAlert ? 1 : 0,
+			battery:   Global.config.batteryEnabled ? 1 : 0
 		};
 
 		Pebble.sendAppMessage(config, ack, function(ev){
