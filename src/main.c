@@ -98,23 +98,12 @@ static void init(void)
 {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "init started");
 
-<<<<<<< HEAD
 	window = window_create();
 	window_stack_push(window, true /* Animated */);
 	weather_data = malloc(sizeof(WeatherData));
 	init_network(weather_data);
 //	window_set_background_color(window, GColorBlack);
 	face_color_update(weather_data, window);
-=======
-  window = window_create();
-  window_stack_push(window, true /* Animated */);
-<<<<<<< HEAD
-  window_set_background_color(window, GColorDukeBlue);
-//  window_set_background_color(window, GColorBlack);
-=======
-  window_set_background_color(window, GColorDukeBlue);  ///////// Change Color to GColorDukeBlue from GColorBlack for Watchface Upper Color ///////
->>>>>>> develop
->>>>>>> gh-pages
 
 	// Setup our layers
 	time_layer_create(TIME_FRAME, window);
