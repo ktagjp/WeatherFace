@@ -11,7 +11,10 @@
 #define BLUETOOTH_H
 
 void UpdateConnection(bool Connected);
+void bluetooth_enable_alert(void);
+void bluetooth_disable_alert(void);
 
 extern bool Is_BT_Connected_Flag;
+extern bool Is_BT_Alert_Enable_Flag;
 
 #endif

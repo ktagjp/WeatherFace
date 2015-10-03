@@ -16,6 +16,7 @@
 #define KEY_JS_READY 9
 #define KEY_SCALE 10
 #define KEY_BATTERY 11
+#define KEY_BLUETOOTH 23
 #define KEY_TZOFFSET 12
 #define KEY_H1_TEMP 13
 #define KEY_H1_COND 14
@@ -57,6 +58,7 @@ typedef struct {
   char scale[2];
   bool debug;
   bool battery;
+  bool bluetooth;
 
   int h1_temp;
   int h1_cond;

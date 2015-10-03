@@ -1,5 +1,6 @@
 #include <pebble.h>
 #include "network.h"
+#include "bluetooth.h"
 #include "battery_layer.h"
 #include "weather_layer.h"
 #include "debug_layer.h"
@@ -33,6 +34,7 @@ static void appmsg_in_received(DictionaryIterator *received, void *context) {
 	Tuple *debug_tuple       = dict_find(received, KEY_DEBUG);
 	Tuple *scale_tuple       = dict_find(received, KEY_SCALE);
 	Tuple *battery_tuple     = dict_find(received, KEY_BATTERY);
+	Tuple *bluetooth_tuple     = dict_find(received, KEY_BLUETOOTH);
 
 	// Hourly Weather
 	Tuple *h1_temp_tuple = dict_find(received, KEY_H1_TEMP);
@@ -84,14 +86,21 @@ static void appmsg_in_received(DictionaryIterator *received, void *context) {
 
 		weather->debug   = (bool)debug_tuple->value->int32;
 		weather->battery = (bool)battery_tuple->value->int32;
+		weather->bluetooth = (bool)bluetooth_tuple->value->int32;
 
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "Configuration serv:%s color:%s scale:%s debug:%i batt:%i", 
-			weather->service, weather->color, weather->scale, weather->debug, weather->battery);
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Configuration serv:%s color:%s scale:%s debug:%i batt:%i bt:%i", 
+			weather->service, weather->color, weather->scale, weather->debug, weather->battery, weather->bluetooth);
 
 		if (weather->battery) {
 			battery_enable_display();
 		} else {
 			battery_disable_display();
+		}
+
+		if (weather->bluetooth) {
+			bluetooth_enable_alert();
+		} else {
+			bluetooth_disable_alert();
 		}
 
 		if (weather->debug) {
@@ -261,6 +270,7 @@ void request_weather(WeatherData *weather_data) {
 	dict_write_cstring(iter, KEY_SCALE, weather_data->scale);
 	dict_write_uint8(iter, KEY_DEBUG, (uint8_t)weather_data->debug);
 	dict_write_uint8(iter, KEY_BATTERY, (uint8_t)weather_data->battery);
+	dict_write_uint8(iter, KEY_BLUETOOTH, (uint8_t)weather_data->bluetooth);
 
 	dict_write_end(iter);
 
