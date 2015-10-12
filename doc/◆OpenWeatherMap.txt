@@ -1,0 +1,54 @@
+◆OpenWeatherMap
+
+◆Query => http://api.openweathermap.org/data/2.5/weather?lat=35.611&lon=139.683
+
+◆Response
+
+{
+"coord":
+	{
+		"lon":139.67,
+		"lat":35.58
+	},
+"weather":
+	[
+		{
+			"id":803,
+			"main":	"Clouds",
+			"description":"broken clouds",
+			"icon":"04n"
+		}
+	],
+"base":"stations",
+"main":
+	{
+		"temp":297.99,
+		"pressure":1006,
+		"humidity":83,
+		"temp_min":294.82,
+		"temp_max":300.93
+	},
+"visibility":10000,
+"wind":
+	{
+		"speed":4.6,
+		"deg":180
+	},
+"clouds":
+	{
+		"all":75
+	},
+"dt":1442658304,
+"sys":
+	{
+		"type":1,
+		"id":7619,
+		"message":0.0152,
+		"country":"JP",
+		"sunrise":1442608002,
+		"sunset":1442652189
+	},
+"id":1864381,
+"name":"Denenchōfu",
+"cod":200
+}

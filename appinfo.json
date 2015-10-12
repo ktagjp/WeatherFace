@@ -1,0 +1,91 @@
+{
+    "appKeys": {
+        "battery": 11,
+        "bluetooth": 23,
+        "color": 22,
+        "condition": 1,
+        "debug": 8,
+        "error": 5,
+        "h1_cond": 14,
+        "h1_pop": 16,
+        "h1_temp": 13,
+        "h1_time": 15,
+        "h2_cond": 18,
+        "h2_pop": 20,
+        "h2_temp": 17,
+        "h2_time": 19,
+        "hourly_enabled": 21,
+        "js_ready": 9,
+        "locale": 7,
+        "pubdate": 4,
+        "scale": 10,
+        "service": 6,
+        "sunrise": 2,
+        "sunset": 3,
+        "temperature": 0,
+        "tzoffset": 12
+    },
+    "capabilities": [
+        "location",
+        "configurable"
+    ],
+    "companyName": "Kenji Taguchi",
+    "longName": "Weather Face",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/30x30.png",
+                "name": "ICON_30X30",
+                "type": "png"
+            },
+            {
+                "file": "images/45x45.png",
+                "name": "ICON_45X45",
+                "type": "png"
+            },
+            {
+                "file": "fonts/futura_condensed_bold-webfont.ttf",
+                "name": "FUTURA_CONDENSED_53",
+                "type": "font"
+            },
+            {
+                "file": "images/screenshot.png",
+                "menuIcon": true,
+                "name": "SCREEN_28x28",
+                "type": "png"
+            },
+            {
+                "characterRegex": "[0-9\u00b0 -]",
+                "file": "fonts/futura.ttf",
+                "name": "FUTURA_17",
+                "trackingAdjust": -2,
+                "type": "font"
+            },
+            {
+                "characterRegex": "[A-Za-z0-9 ]",
+                "file": "fonts/futura.ttf",
+                "name": "FUTURA_18",
+                "trackingAdjust": 3,
+                "type": "font"
+            },
+            {
+                "characterRegex": "[0-9\u00b0 -]",
+                "file": "fonts/futura.ttf",
+                "name": "FUTURA_30",
+                "trackingAdjust": -3,
+                "type": "font"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "Weather Face",
+    "targetPlatforms": [
+        "basalt"
+    ],
+    "uuid": "6adb85a2-d3df-401a-be8b-83e30eb6364a",
+    "versionLabel": "0.1",
+    "watchapp": {
+        "watchface": true
+    }
+}
