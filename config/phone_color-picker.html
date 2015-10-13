@@ -24,6 +24,17 @@
 
 <BODY>
 
+			<div class='item-container'>
+				<div class='item-container-header'>Customizability</div>
+				<div class='item-container-content'>
+					<label class='item'>
+						Background Color
+						<input id='background_color_picker' type='text' class='item-color item-color-normal' value='#000000'>
+					</label>
+				</div>
+			</div>
+
+
 	<DIV id="main" data-role="page">
 		<DIV class="ui-body ui-body-a" data-role="content">
 
@@ -54,14 +65,19 @@
 			</DIV>
 
 			<DIV data-role="fieldcontain">
-				<FIELDSET data-role="controlgroup" data-mini="true">
-					<LEGEND>Background color2:</LEGEND>
-					<INPUT name="bg-color2" class="custom" id="background_color_picker" type="text" class='item-color item-color-normal' value="#000000">
-						<LABEL for="background_color_picker">Background color 2</LABEL>
-				</FIELDSET>
+			<div class='item-container'>
+				<div class='item-container-header'>Customizability</div>
+				<div class='item-container-content'>
+					<label class='item'>
+						Background Color
+						<input id='background_color_picker' type='text' class='item-color item-color-normal' value='#000000'>
+					</label>
+				</div>
+			</div>
 			</DIV>
 
 			<DIV data-role="fieldcontain">
+				
 				<LABEL for="fliphourly">Hourly Weather (requires key):</LABEL>
 				<SELECT name="fliphourly" id="fliphourly" data-role="slider" data-mini="true">
 					<OPTION value="off">Off</OPTION>
