@@ -14,6 +14,8 @@
 <LINK href="WeatherFaceConfiguration.files/jquery.mobile.min.css" rel="stylesheet"> 
 
 <STYLE> #apikey { display: none;} </STYLE>
+<STYLE> #apikey { display: none;} </STYLE>
+<STYLE> #apikey { display: none;} </STYLE>
 
 <SCRIPT src="WeatherFaceConfiguration.files/jquery.min.js"></SCRIPT>
 
@@ -53,11 +55,11 @@
 
 
 			<DIV data-role="fieldcontain">
-				<LABEL for="sel-color" class=sel-color>Background color:</LABEL>
-				<SELECT name="sel-color" id="sel-color">
-					<OPTION value="sel-duke">Duke Blue</OPTION>
-					<OPTION value="sel-blak">Black</OPTION>
-					<OPTION value="sel-redd">Red</OPTION>
+				<LABEL for="sel-color">Background color:</LABEL>
+				<SELECT name="sel-color" id="sel-color" data-mini="true">
+					<OPTION value="duke">Duke Blue</OPTION>
+					<OPTION value="black">Black</OPTION>
+					<OPTION value="red">Red</OPTION>
 				</SELECT>
 			</DIV>
 
@@ -112,6 +114,28 @@
 				</SELECT>
 			</DIV>
 
+
+			<DIV data-role="fieldcontain">
+				<LABEL for="fliptimesig">Hourly Vibration:</LABEL>  
+				<SELECT name="fliptimesig" id="fliptimesig" data-role="slider" data-mini="true">
+					<OPTION value="off">Off</OPTION>
+					<OPTION value="on">On</OPTION>
+				</SELECT>
+			</DIV>
+
+			<DIV id="duration" data-role="fieldcontain" data-mini="true">
+				<FIELDSET data-role="controlgroup" data-mini="true">
+					<DIV class="ui-field-contain">
+						<LABEL for="start_time">Vibe Starts[00-23]:</LABEL>
+						<INPUT name="start_time" id="start_time" type="text"> 
+					</DIV>
+					<DIV class="ui-field-contain">
+						<LABEL for="end_time">Vibe Ends[00-23]:</LABEL>
+						<INPUT name="end_time" id="end_time" type="text"> 
+					</DIV>
+				</FIELDSET>
+			</DIV>
+
 			<DIV data-role="fieldcontain">
 				<LABEL for="flipdebug">Debug Mode:</LABEL>
 			    <SELECT name="flipdebug" id="flipdebug" data-role="slider" data-mini="true">
@@ -136,12 +160,15 @@
 		function saveOptions() {
 			return {
 				'service':   $("#radioyahoo").is(':checked') ? 'yahoo' : $("#radioopen").is(':checked') ? 'open' : 'wundr',
-				'color':     $("#radioduke").is(':checked') ? 'duke' : $("#radioblack").is(':checked') ? 'black' : 'red',
+				'color':     $("select[name=sel-color]").val(),
 				'scale':     $("#radioF").is(':checked')     ? 'F' : 'C',
 				'battery':   $("select[name=flipbattery]").prop('selectedIndex') ? 'on' : 'off',
 				'bluetooth': $("select[name=flipbluetooth]").prop('selectedIndex') ? 'on' : 'off',
+				'timesig':   $("select[name=fliptimesig]").prop('selectedIndex') ? 'on' : 'off',
 				'debug':     $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
 				'wuApiKey':  $("select[name=fliphourly]").prop('selectedIndex')  ? $("#text-apikey").val() : null
+				'StartSig':  $("select[name=fliptimesig]").prop('selectedIndex')  ? $("#start_time").val() : null
+				'Endsig':    $("select[name=fliptimesig]").prop('selectedIndex')  ? $("#end_time").val() : null
 			};
 		}
 
@@ -185,15 +212,7 @@
 
 			var color = getURLParameter('c');
 
-			if (color === 'duke') {
-				$("#radioduke").attr("checked", "checked");
-			} else if (color === 'black') {
-				$("#radioblack").attr("checked", "checked");
-			} else {
-				$("#radiored").attr("checked", "checked");
-			}
-
-			$("input[name='bg-color']").checkboxradio("refresh");
+			$("select[name=sel-color]").val(color);
 
 			var scale = getURLParameter('u');
 
@@ -233,6 +252,25 @@
 			} else {
 				flipBluetooth.prop('selectedIndex', 1);
 			}
+
+			var flipTimesig = $("select[name=fliptimesig]");
+			var bluetooth = getURLParameter('v');
+
+			if (bluetooth === 'off') {
+				flipTimesig.prop('selectedIndex', 0);
+			} else {
+				flipTimesig.prop('selectedIndex', 1);
+			}
+
+			var startTime = getURLParameter('f');
+
+			if (startTime !== 'null')
+				$("#start_time").val(startTime);
+
+			var endTime = getURLParameter('e');
+
+			if (endTime !== 'null')
+				$("#end_time").val(endTime);
 
 			var flipDebug = $("select[name=flipdebug]");
 			var debug = getURLParameter('d');
