@@ -233,9 +233,9 @@
 			}
 
 			var flipTimesignal = $("select[name=fliptimesignal]");
-			var timesignal = getURLParameter('v');
+			var timesig = getURLParameter('v');
 
-			if (timesignal === 'off') {
+			if (timesig === 'off') {
 				flipTimesignal.prop('selectedIndex', 0);
 			} else {
 				flipTimesignal.prop('selectedIndex', 1);
