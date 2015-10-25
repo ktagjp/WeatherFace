@@ -9,23 +9,26 @@ var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone.ht
 // var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/emulator.html';	//////// Config URL for EMULATOR //////
 
 var Global = {
-  externalDebug:     false, // POST logs to external server - dangerous! lat lon recorded
-  wuApiKey:          null, // register for a free api key!
-  hourlyIndex1:      2, // 3 Hours from now 
-  hourlyIndex2:      5, // 6 hours from now                                  //////// Change to 5 from 8 ////////
-  updateInProgress:  false,
-  updateWaitTimeout: 1 * 60 * 1000, // one minute in ms
-  lastUpdateAttempt: new Date(),
-  maxRetry:          3,
-  retryWait:         500, // ms
-  config: {
-    debugEnabled:   false,
-    bluetoothAlert: true,
-    batteryEnabled: true,
-	backColor:		COLOR_DUKEBLUE,
-    weatherService: SERVICE_YAHOO_WEATHER,
-    weatherScale:   'F'
-  },
+	externalDebug:     false, // POST logs to external server - dangerous! lat lon recorded
+	wuApiKey:          null, // register for a free api key!
+	tsStartTime:       7,
+	tsEndTime:         22,
+	hourlyIndex1:      2, // 3 Hours from now 
+	hourlyIndex2:      5, // 6 hours from now                                  //////// Change to 5 from 8 ////////
+	updateInProgress:  false,
+	updateWaitTimeout: 1 * 60 * 1000, // one minute in ms
+	lastUpdateAttempt: new Date(),
+	maxRetry:          3,
+	retryWait:         500, // ms
+	config: {
+		debugEnabled:   false,
+		bluetoothAlert: true,
+		batteryEnabled: true,
+		timesigEnabled: false,
+		backColor:		COLOR_DUKEBLUE,
+		weatherService: SERVICE_YAHOO_WEATHER,
+		weatherScale:   'F'
+	},
 };
 
 // Allow console messages to be turned on / off 
@@ -66,9 +69,12 @@ Pebble.addEventListener("appmessage", function(data) {
 										: COLOR_RED;
 		Global.config.debugEnabled   =  data.payload.debug   === 1;
 		Global.config.bluetoothAlert =  data.payload.bluetooth === 1;
+		Global.config.timesigEnabled =  data.payload.timesig === 1;
 		Global.config.batteryEnabled =  data.payload.battery === 1;
 		Global.config.weatherScale   = (data.payload.scale   === 'C') ? 'C' : 'F';
 		Global.wuApiKey              =  window.localStorage.getItem('wuApiKey');
+//		Global.tsStartTime           =  window.localStorage.getItem('tsStartTime');
+//		Global.tsEndTime             =  window.localStorage.getItem('tsEndTime');
 		updateWeather();
 	} catch (ex) {
       console.warn("Could not retrieve data sent from Pebble: "+ex.message);
@@ -80,78 +86,86 @@ Pebble.addEventListener("appmessage", function(data) {
  * for the latest config settings. So I persist them in a rather ugly Global variable. 
  */
 Pebble.addEventListener("showConfiguration", function (e) {
-    var options = {
-      's': Global.config.weatherService,
-      'c': Global.config.backColor,
-      'd': Global.config.debugEnabled,
-      'u': Global.config.weatherScale,
-      'b': Global.config.batteryEnabled ? 'on' : 'off',
-      't': Global.config.bluetoothAlert ? 'on' : 'off',
-      'a': Global.wuApiKey
-    };
-    var url = CONFIGURATION_URL+'?'+serialize(options);
-    console.log('Configuration requested using url: '+url);
-    Pebble.openURL(url);
+	var options = {
+		's': Global.config.weatherService,
+		'c': Global.config.backColor,
+		'd': Global.config.debugEnabled,
+		'u': Global.config.weatherScale,
+		'b': Global.config.batteryEnabled ? 'on' : 'off',
+		't': Global.config.bluetoothAlert ? 'on' : 'off',
+		'v': Global.config.timesigEnabled ? 'on' : 'off',
+		'a': Global.wuApiKey
+//		'f': Global.tsStartTime,
+//		'e': Global.tsEndTime
+	};
+	var url = CONFIGURATION_URL+'?'+serialize(options);
+	console.log('Configuration requested using url: '+url);
+	Pebble.openURL(url);
 });
 
 Pebble.addEventListener("webviewclosed", function(e) {
-    /*
-     * Android Hack - for whatever reason this event is always firing on Android with a message of 'CANCELLED'
-     */
-    if (e.response && e.response !== 'CANCELLED') {
-      try {
-        var settings = JSON.parse(decodeURIComponent(e.response));
+	/*
+	 * Android Hack - for whatever reason this event is always firing on Android with a message of 'CANCELLED'
+	 */
+	if (e.response && e.response !== 'CANCELLED') {
+		try {
+			var settings = JSON.parse(decodeURIComponent(e.response));
 
-        // Android 'cancel' sends a blank object
-        if (Object.keys(settings).length <= 0) {
-          return; 
-        }
+			// Android 'cancel' sends a blank object
+			if (Object.keys(settings).length <= 0) {
+				return; 
+			}
 
-        console.log("Settings received: "+JSON.stringify(settings));
+			console.log("Settings received: "+JSON.stringify(settings));
 
-        var refreshNeeded = (settings.service  !== Global.config.weatherService ||
-                             settings.color    !== Global.config.backColor      ||
-                             settings.scale    !== Global.config.weatherScale   ||
-                             settings.wuApiKey !== Global.wuApiKey);
+			var refreshNeeded = (	settings.service		!== Global.config.weatherService	||
+									settings.color			!== Global.config.backColor			||
+									settings.scale			!== Global.config.weatherScale		||
+									settings.wuApiKey		!== Global.wuApiKey
+								);
 																		///// Add WeatherUnderground for Current Weather Conditions
-        Global.config.weatherService =    (settings.service === SERVICE_OPEN_WEATHER)  ? SERVICE_OPEN_WEATHER
-										: (settings.service === SERVICE_YAHOO_WEATHER) ? SERVICE_YAHOO_WEATHER
-										: SERVICE_WUNDER_WEATHER;
-        Global.config.backColor =		  (settings.color === COLOR_DUKEBLUE)  ? COLOR_DUKEBLUE
-										: (settings.color === COLOR_BLACK) ? COLOR_BLACK
-										: COLOR_RED;
-        Global.config.weatherScale   = settings.scale   === 'C' ? 'C' : 'F';
-        Global.config.debugEnabled   = settings.debug   === 'true';
-        Global.config.bluetoothAlert = settings.bluetooth === 'on';
-        Global.config.batteryEnabled = settings.battery === 'on';
-        Global.wuApiKey              = settings.wuApiKey;
+			Global.config.weatherService = (settings.service === SERVICE_OPEN_WEATHER)  ? SERVICE_OPEN_WEATHER
+										 : (settings.service === SERVICE_YAHOO_WEATHER) ? SERVICE_YAHOO_WEATHER
+										 : SERVICE_WUNDER_WEATHER;
+			Global.config.backColor =	   (settings.color === COLOR_DUKEBLUE)  ? COLOR_DUKEBLUE
+										 : (settings.color === COLOR_BLACK) ? COLOR_BLACK
+										 : COLOR_RED;
+			Global.config.weatherScale   = settings.scale   === 'C' ? 'C' : 'F';
+			Global.config.debugEnabled   = settings.debug   === 'true';
+			Global.config.bluetoothAlert = settings.bluetooth === 'on';
+			Global.config.timesigEnabled = settings.timesig === 'on';
+			Global.config.batteryEnabled = settings.battery === 'on';
+			Global.wuApiKey              = settings.wuApiKey;
+//			Global.tsStartTime           = settings.StartSig;
+//			Global.tsEndTime             = settings.Endsig;
 
-		if (Global.wuApiKey !== null) {
-			window.localStorage.setItem('wuApiKey', Global.wuApiKey);
-		} else {
-			window.localStorage.removeItem('wuApiKey');
-		}
+			if (Global.wuApiKey !== null) {
+				window.localStorage.setItem('wuApiKey', Global.wuApiKey);
+			} else {
+				window.localStorage.removeItem('wuApiKey');
+			}
         
-		var config = {
-			service:   Global.config.weatherService,
-			color:     Global.config.backColor,
-			scale:     Global.config.weatherScale,
-			debug:     Global.config.debugEnabled   ? 1 : 0,
-			bluetooth: Global.config.bluetoothAlert ? 1 : 0,
-			battery:   Global.config.batteryEnabled ? 1 : 0
-		};
+			var config = {
+				service:	Global.config.weatherService,
+				color:		Global.config.backColor,
+				scale:		Global.config.weatherScale,
+				debug:		Global.config.debugEnabled   ? 1 : 0,
+				bluetooth:	Global.config.bluetoothAlert ? 1 : 0,
+				battery:	Global.config.batteryEnabled ? 1 : 0,
+				timesig:	Global.config.timesigEnabled ? 1 : 0
+			};
 
-		Pebble.sendAppMessage(config, ack, function(ev){
-			nack(config);
-		});
+			Pebble.sendAppMessage(config, ack, function(ev){
+				nack(config);
+			});
 
-		if (refreshNeeded) {
-			updateWeather();
+			if (refreshNeeded) {
+				updateWeather();
+			}
+		} catch(ex) {
+			console.warn("Unable to parse response from configuration:"+ex.message);
 		}
-	} catch(ex) {
-        console.warn("Unable to parse response from configuration:"+ex.message);
-      }
-    }
+	}
 });
 
 var ack  = function ()  { console.log("Pebble ACK sendAppMessage");}

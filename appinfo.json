@@ -23,6 +23,9 @@
         "sunrise": 2,
         "sunset": 3,
         "temperature": 0,
+        "timesig": 24,
+        "ts_end_time": 26,
+        "ts_start_time": 25,
         "tzoffset": 12
     },
     "capabilities": [

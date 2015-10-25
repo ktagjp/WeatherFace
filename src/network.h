@@ -27,6 +27,9 @@
 #define KEY_H2_TIME 19
 #define KEY_H2_POP 20
 #define KEY_HOURLY_ENABLED 21
+#define KEY_TIME_SIGNAL 24
+#define KEY_TS_START 25
+#define KEY_TS_END 26
 
 #define SERVICE_OPEN_WEATHER "open"
 #define SERVICE_YAHOO_WEATHER "yahoo"
@@ -59,6 +62,9 @@ typedef struct {
   bool debug;
   bool battery;
   bool bluetooth;
+  bool timesig;
+  int  tsstart;
+  int  tsend;
 
   int h1_temp;
   int h1_cond;

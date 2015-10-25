@@ -1,5 +1,6 @@
 #include "network.h"
 #include "bluetooth.h"
+#include "datetime_layer.h"
 #include "debug_layer.h"
 #include "battery_layer.h"
 #include "config.h"
@@ -37,6 +38,15 @@ void load_persisted_values(WeatherData *weather_data)
   } else {
     bluetooth_disable_alert();
   }
+
+  // Hourly Vibration
+  weather_data->timesig = persist_exists(KEY_VIBE_TIME_SIGNAL) ? persist_read_bool(KEY_VIBE_TIME_SIGNAL) : DEFAULT_VIBE_TIME_SIGNAL; 
+
+  if (weather_data->timesig) {
+    enable_time_signal();
+  } else {
+    disable_time_signal();
+  }
   
   // Weather Service
   if (persist_exists(KEY_WEATHER_SERVICE)) {
@@ -59,20 +69,21 @@ void load_persisted_values(WeatherData *weather_data)
     strcpy(weather_data->scale, DEFAULT_WEATHER_SCALE);
   }
 
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "PersistLoad:  d:%d b:%d t:%d s:%s c:%s u:%s", 
-      weather_data->debug, weather_data->battery, weather_data->bluetooth, weather_data->service, weather_data->color, weather_data->scale);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "PersistLoad:  d:%d b:%d t:%d v:%d s:%s c:%s u:%s", 
+      weather_data->debug, weather_data->battery, weather_data->bluetooth, weather_data->timesig, weather_data->service, weather_data->color, weather_data->scale);
 }
 
 void store_persisted_values(WeatherData *weather_data) 
 {
   persist_write_bool(KEY_DEBUG_MODE, weather_data->debug);
   persist_write_bool(KEY_ALERT_BLUETOOTH, weather_data->bluetooth);
+  persist_write_bool(KEY_VIBE_TIME_SIGNAL, weather_data->timesig);
   persist_write_bool(KEY_DISPLAY_BATTERY, weather_data->battery);
   persist_write_string(KEY_WEATHER_SERVICE, weather_data->service);
   persist_write_string(KEY_FACE_COLOR, weather_data->color);
   persist_write_string(KEY_WEATHER_SCALE, weather_data->scale);
 
 
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "PersistStore:  d:%d b:%d t:%d s:%s c:%s u:%s", 
-      weather_data->debug, weather_data->battery, weather_data->bluetooth, weather_data->service, weather_data->color, weather_data->scale);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "PersistStore:  d:%d b:%d t:%d v:%d s:%s c:%s u:%s", 
+      weather_data->debug, weather_data->battery, weather_data->bluetooth, weather_data->timesig, weather_data->service, weather_data->color, weather_data->scale);
 }

@@ -1,6 +1,11 @@
 #include <pebble.h>
 #include "datetime_layer.h"
 
+bool Is_TimeSignal_Enable = 0;
+
+static int ts_start_time = 7;
+static int ts_end_time   = 22;
+
 static TextLayer *time_layer;
 static TextLayer *date_layer;
 
@@ -10,6 +15,46 @@ static char time_text[] = "00:00";
 /* Preload the fonts */
 GFont font_date;
 GFont font_time;
+
+// Vibe pattern: ON for 200ms, OFF for 100ms, ON for 400ms:
+static const uint32_t const segments[] = { 50, 500, 50 };
+
+static VibePattern pat = {
+  .durations = segments,
+  .num_segments = ARRAY_LENGTH(segments),
+};
+
+void TimeSignal(void) {
+	time_t currentTime = time(NULL);
+    
+	// Update the time - Fix to deal with 12 / 24 centering bug
+	struct tm *currentLocalTime = localtime(&currentTime);
+
+	if (currentLocalTime->tm_min == 0 && Is_TimeSignal_Enable) {
+		if (ts_start_time == ts_end_time) {
+			vibes_enqueue_custom_pattern(pat);  //  When BT is lost connection, vibrate three times.
+		} else if (ts_start_time < ts_end_time) {
+			if (currentLocalTime->tm_hour >= ts_start_time && currentLocalTime->tm_hour <= ts_end_time)
+				vibes_enqueue_custom_pattern(pat);  //  When BT is lost connection, vibrate three times.
+		} else {
+			if (currentLocalTime->tm_hour >= ts_start_time || currentLocalTime->tm_hour <= ts_end_time)
+				vibes_enqueue_custom_pattern(pat);  //  When BT is lost connection, vibrate three times.
+		}
+	}
+}
+
+void set_time_signal(int start, int end) {
+	ts_start_time = start;
+	ts_end_time   = end;
+}
+
+void enable_time_signal(void) {
+	Is_TimeSignal_Enable = 1;
+}
+
+void disable_time_signal(void) {
+	Is_TimeSignal_Enable = 0;
+}
 
 void time_layer_create(GRect frame, Window *window)
 {
