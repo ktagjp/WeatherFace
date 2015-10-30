@@ -5,7 +5,7 @@ var COLOR_DUKEBLUE			= "duke";
 var COLOR_BLACK				= "black";
 var COLOR_RED				= "red";		///// Add Background Color value
 var EXTERNAL_DEBUG_URL    = '';
-var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone.html';		//////// Config URL for PHONE //////
+var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone_add_startend.html';		//////// Config URL for PHONE //////
 // var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/emulator.html';	//////// Config URL for EMULATOR //////
 
 var Global = {
@@ -73,8 +73,8 @@ Pebble.addEventListener("appmessage", function(data) {
 		Global.config.batteryEnabled =  data.payload.battery === 1;
 		Global.config.weatherScale   = (data.payload.scale   === 'C') ? 'C' : 'F';
 		Global.wuApiKey              =  window.localStorage.getItem('wuApiKey');
-//		Global.tsStartTime           =  window.localStorage.getItem('tsStartTime');
-//		Global.tsEndTime             =  window.localStorage.getItem('tsEndTime');
+		Global.tsStartTime           =  window.localStorage.getItem('tsStartTime');
+		Global.tsEndTime             =  window.localStorage.getItem('tsEndTime');
 		updateWeather();
 	} catch (ex) {
       console.warn("Could not retrieve data sent from Pebble: "+ex.message);
@@ -94,9 +94,9 @@ Pebble.addEventListener("showConfiguration", function (e) {
 		'b': Global.config.batteryEnabled ? 'on' : 'off',
 		't': Global.config.bluetoothAlert ? 'on' : 'off',
 		'v': Global.config.timesigEnabled ? 'on' : 'off',
-		'a': Global.wuApiKey
-//		'f': Global.tsStartTime,
-//		'e': Global.tsEndTime
+		'a': Global.wuApiKey,
+		'f': Global.tsStartTime,
+		'e': Global.tsEndTime
 	};
 	var url = CONFIGURATION_URL+'?'+serialize(options);
 	console.log('Configuration requested using url: '+url);
@@ -136,15 +136,27 @@ Pebble.addEventListener("webviewclosed", function(e) {
 			Global.config.timesigEnabled = settings.timesig === 'on';
 			Global.config.batteryEnabled = settings.battery === 'on';
 			Global.wuApiKey              = settings.wuApiKey;
-//			Global.tsStartTime           = settings.StartSig;
-//			Global.tsEndTime             = settings.Endsig;
+			Global.tsStartTime           = settings.tsstart;
+			Global.tsEndTime             = settings.tsend;
 
 			if (Global.wuApiKey !== null) {
 				window.localStorage.setItem('wuApiKey', Global.wuApiKey);
 			} else {
 				window.localStorage.removeItem('wuApiKey');
 			}
-        
+
+			if (Global.tsStartTime !== null) {
+				window.localStorage.setItem('tsstart', Global.tsStartTime);
+			} else {
+				window.localStorage.removeItem('tsstart');
+			}
+
+			if (Global.tsEndTime !== null) {
+				window.localStorage.setItem('tsend', Global.tsEndTime);
+			} else {
+				window.localStorage.removeItem('tsend');
+			}
+
 			var config = {
 				service:	Global.config.weatherService,
 				color:		Global.config.backColor,
