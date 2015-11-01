@@ -110,8 +110,8 @@
 			</DIV>
 
 			<DIV data-role="fieldcontain">
-				<LABEL for="sel-tsstart">Start of Vibration:</LABEL>
-				<SELECT name="sel-tsstart" id="sel-tsstart" data-mini="true">
+				<LABEL for="vibstart" class="vibstart">Start of Vibration:</LABEL>
+				<SELECT name="vibstart" id="vibstart" data-mini="true">
 					<OPTION value="0">AM 0:00</OPTION>
 					<OPTION value="1">AM 1:00</OPTION>
 					<OPTION value="2">AM 2:00</OPTION>
@@ -140,8 +140,8 @@
 			</DIV>
 
 			<DIV data-role="fieldcontain">
-				<LABEL for="sel-tsend">End of Vibration:</LABEL>
-				<SELECT name="sel-tsend" id="sel-tsend" data-mini="true">
+				<LABEL for="vibend">End of Vibration:</LABEL>
+				<SELECT name="vibend" id="vibend" data-mini="true">
 					<OPTION value="0">AM 0:00</OPTION>
 					<OPTION value="1">AM 1:00</OPTION>
 					<OPTION value="2">AM 2:00</OPTION>
@@ -198,8 +198,10 @@
 				'battery':   $("select[name=flipbattery]").prop('selectedIndex') ? 'on' : 'off',
 				'bluetooth': $("select[name=flipbluetooth]").prop('selectedIndex') ? 'on' : 'off',
 				'timesig':   $("select[name=fliptimesignal]").prop('selectedIndex') ? 'on' : 'off',
-				'tsstart':   $("select[name=fliptimesignal]").prop('selectedIndex') ? $("#sel-tsstart").val() : '7',
-				'tsend':     $("select[name=fliptimesignal]").prop('selectedIndex') ? $("#sel-tsend").val() : '22',
+				'tsstart':   $("select[name=fliptimesignal]").prop('selectedIndex') ? 
+							 		$("select[name=vibstart]").prop('selectedIndex') : 7,
+				'tsend':     $("select[name=fliptimesignal]").prop('selectedIndex') ? 
+							 		$("select[name=vibend]").prop('selectedIndex') : 22,
 				'debug':     $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
 				'wuApiKey':  $("select[name=fliphourly]").prop('selectedIndex')  ? $("#text-apikey").val() : null
 			};
@@ -210,6 +212,23 @@
 				(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
 			);
 		}
+
+		// Get query variables
+		function getQueryParam(variable, defaultValue) {
+			// Find all URL parameters
+			var query = location.search.substring(1);
+			var vars = query.split('&');
+			for (var i = 0; i < vars.length; i++) {
+				var pair = vars[i].split('=');
+
+				// If the query variable parameter is found, decode it to use and return it for use
+				if (pair[0] === variable) {
+					return decodeURIComponent(pair[1]);
+				}
+			}
+			return defaultValue || false;
+		}
+
 
 		$().ready(function() {
 
@@ -303,21 +322,22 @@
 				flipTimesignal.prop('selectedIndex', 1);
 			}
 
-			var flipSelStart = $("select[name=flipbluetooth]");
+			var flipVibStart = $("select[name=vibstart]");
 			var tsstart = getURLParameter('f');
 
 			if (tsstart >= 0 && tsstart <= 23) {
-				$("#sel-tsstart").val(tsstart);
+				flipVibStart.prop('selectedIndex', tsstart);
 			} else {
-				$("#sel-tsstart").val('7');
+				flipVibStart.prop('selectedIndex', 7);
 			}
 
+			var flipVibEnd = $("select[name=vibend]");
 			var tsend = getURLParameter('e');
 
 			if (tsend >= 0 && tsend <= 23) {
-				$("#sel-tsend").val(tsend);
+				flipVibEnd.prop('selectedIndex', tsend);
 			} else {
-				$("#sel-tsend").val('22');
+				flipVibEnd.prop('selectedIndex', 22);
 			}
 
 			var flipDebug = $("select[name=flipdebug]");
@@ -339,7 +359,8 @@
 			$("#b-submit").click(function() {
 				console.log("Submit");
 
-				var location = "pebblejs://close#" + (JSON.stringify(saveOptions()));
+				var returnTo = getQueryParam('return_to', 'pebblejs://close#');
+				var location = returnTo + encodeURIComponent(JSON.stringify(saveOptions()));
 				console.log("Warping to: " + location);
 				console.log(location);
 				document.location = location;
