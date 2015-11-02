@@ -110,18 +110,62 @@
 			</DIV>
 
 			<DIV data-role="fieldcontain">
-				<LABEL for="vibstart">Start of Vibration:</LABEL>  
-				<SELECT name="vibstart" id="vibstart" data-role="slider" data-mini="true">
-					<OPTION value="off">Off</OPTION>
-					<OPTION value="on">On</OPTION>
+				<LABEL for="vibstart">Start of Vibration:</LABEL>
+				<SELECT name="vibstart" id="vibstart" data-mini="true">
+					<OPTION value="0">AM 0:00</OPTION>
+					<OPTION value="1">AM 1:00</OPTION>
+					<OPTION value="2">AM 2:00</OPTION>
+					<OPTION value="3">AM 3:00</OPTION>
+					<OPTION value="4">AM 4:00</OPTION>
+					<OPTION value="5">AM 5:00</OPTION>
+					<OPTION value="6">AM 6:00</OPTION>
+					<OPTION value="7">AM 7:00</OPTION>
+					<OPTION value="8">AM 8:00</OPTION>
+					<OPTION value="9">AM 9:00</OPTION>
+					<OPTION value="10">AM 10:00</OPTION>
+					<OPTION value="11">AM 11:00</OPTION>
+					<OPTION value="12">PM 0:00</OPTION>
+					<OPTION value="13">PM 1:00</OPTION>
+					<OPTION value="14">PM 2:00</OPTION>
+					<OPTION value="15">PM 3:00</OPTION>
+					<OPTION value="16">PM 4:00</OPTION>
+					<OPTION value="17">PM 5:00</OPTION>
+					<OPTION value="18">PM 6:00</OPTION>
+					<OPTION value="19">PM 7:00</OPTION>
+					<OPTION value="20">PM 8:00</OPTION>
+					<OPTION value="21">PM 9:00</OPTION>
+					<OPTION value="22">PM 10:00</OPTION>
+					<OPTION value="23">PM 11:00</OPTION>
 				</SELECT>
 			</DIV>
 
 			<DIV data-role="fieldcontain">
-				<LABEL for="vibend">End of Vibration:</LABEL>  
-				<SELECT name="vibend" id="vibend" data-role="slider" data-mini="true">
-					<OPTION value="off">Off</OPTION>
-					<OPTION value="on">On</OPTION>
+				<LABEL for="vibend">End of Vibration:</LABEL>
+				<SELECT name="vibend" id="vibend" data-mini="true">
+					<OPTION value="0">AM 0:00</OPTION>
+					<OPTION value="1">AM 1:00</OPTION>
+					<OPTION value="2">AM 2:00</OPTION>
+					<OPTION value="3">AM 3:00</OPTION>
+					<OPTION value="4">AM 4:00</OPTION>
+					<OPTION value="5">AM 5:00</OPTION>
+					<OPTION value="6">AM 6:00</OPTION>
+					<OPTION value="7">AM 7:00</OPTION>
+					<OPTION value="8">AM 8:00</OPTION>
+					<OPTION value="9">AM 9:00</OPTION>
+					<OPTION value="10">AM 10:00</OPTION>
+					<OPTION value="11">AM 11:00</OPTION>
+					<OPTION value="12">PM 0:00</OPTION>
+					<OPTION value="13">PM 1:00</OPTION>
+					<OPTION value="14">PM 2:00</OPTION>
+					<OPTION value="15">PM 3:00</OPTION>
+					<OPTION value="16">PM 4:00</OPTION>
+					<OPTION value="17">PM 5:00</OPTION>
+					<OPTION value="18">PM 6:00</OPTION>
+					<OPTION value="19">PM 7:00</OPTION>
+					<OPTION value="20">PM 8:00</OPTION>
+					<OPTION value="21">PM 9:00</OPTION>
+					<OPTION value="22">PM 10:00</OPTION>
+					<OPTION value="23">PM 11:00</OPTION>
 				</SELECT>
 			</DIV>
 
@@ -154,8 +198,8 @@
 				'battery':   $("select[name=flipbattery]").prop('selectedIndex') ? 'on' : 'off',
 				'bluetooth': $("select[name=flipbluetooth]").prop('selectedIndex') ? 'on' : 'off',
 				'timesig':   $("select[name=fliptimesignal]").prop('selectedIndex') ? 'on' : 'off',
-				'tsstart':   $("select[name=vibstart]").prop('selectedIndex') ?  'on' : 'off',
-				'tsend':     $("select[name=vibend]").prop('selectedIndex') ?  'on' : 'off',
+				'tsstart':   $("select[name=fliptimesignal]").prop('selectedIndex') ? $("#vibstart").val() :  '7',
+				'tsend':     $("select[name=fliptimesignal]").prop('selectedIndex') ? $("#vibend").val()   : '22',
 				'debug':     $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
 				'wuApiKey':  $("select[name=fliphourly]").prop('selectedIndex')  ? $("#text-apikey").val() : null
 			};
@@ -279,20 +323,24 @@
 			var flipVibStart = $("select[name=vibstart]");
 			var tsstart = getURLParameter('f');
 
-			if (tsstart === 'off') {
-				flipVibStart.prop('selectedIndex', 0);
+			if (tsstart >= 0 && tsstart <= 23) {
+				flipVibStart.val(tsstart);
 			} else {
-				flipVibStart.prop('selectedIndex', 1);
+				flipVibStart.val('7');
 			}
+
+			$("select[name='vibstart']").selectmenu("refresh");
 
 			var flipVibEnd = $("select[name=vibend]");
 			var tsend = getURLParameter('e');
 
-			if (tsend === 'off') {
-				flipVibEnd.prop('selectedIndex', 0);
+			if (tsend >= 0 && tsend <= 23) {
+				flipVibEnd.val(tsend);
 			} else {
-				flipVibEnd.prop('selectedIndex', 1);
+				flipVibEnd.val('22');
 			}
+
+			$("select[name='vibend']").selectmenu("refresh");
 
 			var flipDebug = $("select[name=flipdebug]");
 			var debug = getURLParameter('d');
