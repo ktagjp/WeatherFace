@@ -17,7 +17,7 @@ GFont font_date;
 GFont font_time;
 
 // Vibe pattern: ON for 200ms, OFF for 100ms, ON for 400ms:
-static const uint32_t const segments[] = { 50, 500, 50 };
+static const uint32_t const segments[] = { 50, 600, 50 };
 
 static VibePattern pat = {
   .durations = segments,

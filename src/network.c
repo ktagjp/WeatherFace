@@ -8,6 +8,7 @@
 #include "weather_layer.h"
 #include "debug_layer.h"
 #include "main.h"
+#include "config.h"
 #include "persist.h"
 
 const  int MAX_RETRY = 2;
@@ -94,17 +95,15 @@ static void appmsg_in_received(DictionaryIterator *received, void *context) {
 		weather->battery   = (bool)battery_tuple->value->int32;
 		weather->bluetooth = (bool)bluetooth_tuple->value->int32;
 		weather->timesig   = (bool)timesig_tuple->value->int32;
-
-		char **endptr = NULL;
 		
-		int tsstart = (int)strtol(ts_start_tuple->value->cstring, endptr, 10);
-		if (tsstart >= 0 && tsstart <= 23 && errno != ERANGE)
+		int tsstart = (int)ts_start_tuple->value->int32;
+		if (tsstart >= 0 && tsstart <= 23)
 			weather->tsstart = tsstart;
 		else
 			weather->tsstart = 7;
 
-		int tsend   = (int)strtol(ts_end_tuple->value->cstring, endptr, 10);
-		if (tsend >= 0 && tsend <= 23 && errno != ERANGE)
+		int tsend   = (int)ts_end_tuple->value->int32;
+		if (tsend >= 0 && tsend <= 23)
 			weather->tsend = tsend;
 		else
 			weather->tsend = 22;
@@ -305,6 +304,8 @@ void request_weather(WeatherData *weather_data) {
 	dict_write_uint8(iter, KEY_BATTERY, (uint8_t)weather_data->battery);
 	dict_write_uint8(iter, KEY_BLUETOOTH, (uint8_t)weather_data->bluetooth);
 	dict_write_uint8(iter, KEY_TIME_SIGNAL, (uint8_t)weather_data->timesig);
+	dict_write_uint8(iter, KEY_TS_START, (uint8_t)weather_data->tsstart);
+	dict_write_uint8(iter, KEY_TS_END, (uint8_t)weather_data->tsend);
 
 	dict_write_end(iter);
 

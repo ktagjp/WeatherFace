@@ -39,11 +39,16 @@ void load_persisted_values(WeatherData *weather_data)
     bluetooth_disable_alert();
   }
 
+// Vibration Start/End Time
+  weather_data->tsstart = persist_exists(KEY_VIBE_START_TIME) ? persist_read_bool(KEY_VIBE_START_TIME) : DEFAULT_VIBE_START_TIME; 
+  weather_data->tsend   = persist_exists(KEY_VIBE_END_TIME)   ? persist_read_bool(KEY_VIBE_END_TIME)   : DEFAULT_VIBE_END_TIME; 
+
   // Hourly Vibration
   weather_data->timesig = persist_exists(KEY_VIBE_TIME_SIGNAL) ? persist_read_bool(KEY_VIBE_TIME_SIGNAL) : DEFAULT_VIBE_TIME_SIGNAL; 
 
   if (weather_data->timesig) {
-    enable_time_signal();
+	set_time_signal(weather_data->tsstart, weather_data->tsend);
+	enable_time_signal();
   } else {
     disable_time_signal();
   }
@@ -79,6 +84,8 @@ void store_persisted_values(WeatherData *weather_data)
   persist_write_bool(KEY_ALERT_BLUETOOTH, weather_data->bluetooth);
   persist_write_bool(KEY_VIBE_TIME_SIGNAL, weather_data->timesig);
   persist_write_bool(KEY_DISPLAY_BATTERY, weather_data->battery);
+  persist_write_int(KEY_VIBE_START_TIME, weather_data->tsstart);
+  persist_write_int(KEY_VIBE_END_TIME, weather_data->tsend);
   persist_write_string(KEY_WEATHER_SERVICE, weather_data->service);
   persist_write_string(KEY_FACE_COLOR, weather_data->color);
   persist_write_string(KEY_WEATHER_SCALE, weather_data->scale);

@@ -5,14 +5,12 @@ var COLOR_DUKEBLUE			= "duke";
 var COLOR_BLACK				= "black";
 var COLOR_RED				= "red";		///// Add Background Color value
 var EXTERNAL_DEBUG_URL    = '';
-var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone_add_startend.html';		//////// Config URL for PHONE //////
-// var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/emulator.html';	//////// Config URL for EMULATOR //////
+// var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone_add_startend_pho.html';		//////// Config URL for PHONE //////
+var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone_add_startend_emu.html';	//////// Config URL for EMULATOR //////
 
 var Global = {
 	externalDebug:     false, // POST logs to external server - dangerous! lat lon recorded
 	wuApiKey:          null, // register for a free api key!
-	tsStartTime:       7,
-	tsEndTime:         22,
 	hourlyIndex1:      2, // 3 Hours from now 
 	hourlyIndex2:      5, // 6 hours from now                                  //////// Change to 5 from 8 ////////
 	updateInProgress:  false,
@@ -25,6 +23,8 @@ var Global = {
 		bluetoothAlert: true,
 		batteryEnabled: true,
 		timesigEnabled: false,
+		tsStartTime:       7,
+		tsEndTime:         22,
 		backColor:		COLOR_DUKEBLUE,
 		weatherService: SERVICE_YAHOO_WEATHER,
 		weatherScale:   'F'
@@ -70,11 +70,11 @@ Pebble.addEventListener("appmessage", function(data) {
 		Global.config.debugEnabled   =  data.payload.debug   === 1;
 		Global.config.bluetoothAlert =  data.payload.bluetooth === 1;
 		Global.config.timesigEnabled =  data.payload.timesig === 1;
+		Global.config.tsStartTime    =  data.payload.tsstart;
+		Global.config.tsEndTime      =  data.payload.tsend;
 		Global.config.batteryEnabled =  data.payload.battery === 1;
 		Global.config.weatherScale   = (data.payload.scale   === 'C') ? 'C' : 'F';
 		Global.wuApiKey              =  window.localStorage.getItem('wuApiKey');
-		Global.tsStartTime           =  window.localStorage.getItem('tsStartTime');
-		Global.tsEndTime             =  window.localStorage.getItem('tsEndTime');
 		updateWeather();
 	} catch (ex) {
       console.warn("Could not retrieve data sent from Pebble: "+ex.message);
@@ -94,9 +94,9 @@ Pebble.addEventListener("showConfiguration", function (e) {
 		'b': Global.config.batteryEnabled ? 'on' : 'off',
 		't': Global.config.bluetoothAlert ? 'on' : 'off',
 		'v': Global.config.timesigEnabled ? 'on' : 'off',
-		'a': Global.wuApiKey,
-		'f': Global.tsStartTime,
-		'e': Global.tsEndTime
+		'f': Global.config.tsStartTime,
+		'e': Global.config.tsEndTime,
+		'a': Global.wuApiKey
 	};
 	var url = CONFIGURATION_URL+'?'+serialize(options);
 	console.log('Configuration requested using url: '+url);
@@ -134,27 +134,15 @@ Pebble.addEventListener("webviewclosed", function(e) {
 			Global.config.debugEnabled   = settings.debug   === 'true';
 			Global.config.bluetoothAlert = settings.bluetooth === 'on';
 			Global.config.timesigEnabled = settings.timesig === 'on';
+			Global.config.tsStartTime    = settings.tsstart;
+			Global.config.tsEndTime      = settings.tsend;
 			Global.config.batteryEnabled = settings.battery === 'on';
 			Global.wuApiKey              = settings.wuApiKey;
-			Global.tsStartTime           = settings.tsstart;
-			Global.tsEndTime             = settings.tsend;
 
 			if (Global.wuApiKey !== null) {
 				window.localStorage.setItem('wuApiKey', Global.wuApiKey);
 			} else {
 				window.localStorage.removeItem('wuApiKey');
-			}
-
-			if (Global.tsStartTime !== null) {
-				window.localStorage.setItem('tsstart', Global.tsStartTime);
-			} else {
-				window.localStorage.removeItem('tsstart');
-			}
-
-			if (Global.tsEndTime !== null) {
-				window.localStorage.setItem('tsend', Global.tsEndTime);
-			} else {
-				window.localStorage.removeItem('tsend');
 			}
 
 			var config = {
@@ -164,7 +152,9 @@ Pebble.addEventListener("webviewclosed", function(e) {
 				debug:		Global.config.debugEnabled   ? 1 : 0,
 				bluetooth:	Global.config.bluetoothAlert ? 1 : 0,
 				battery:	Global.config.batteryEnabled ? 1 : 0,
-				timesig:	Global.config.timesigEnabled ? 1 : 0
+				timesig:	Global.config.timesigEnabled ? 1 : 0,
+				tsstart:	Global.config.tsStartTime,
+				tsend:		Global.config.tsStartTime,
 			};
 
 			Pebble.sendAppMessage(config, ack, function(ev){

@@ -24,8 +24,8 @@
         "sunset": 3,
         "temperature": 0,
         "timesig": 24,
-        "ts_end_time": 26,
-        "ts_start_time": 25,
+        "tsend": 26,
+        "tsstart": 25,
         "tzoffset": 12
     },
     "capabilities": [
@@ -38,9 +38,15 @@
     "resources": {
         "media": [
             {
-                "file": "fonts/futura_condensed_bold-webfont.ttf",
-                "name": "FUTURA_CONDENSED_53",
-                "type": "font"
+                "file": "images/screenshot.png",
+                "menuIcon": true,
+                "name": "SCREEN_28x28",
+                "type": "png"
+            },
+            {
+                "file": "images/45x45.png",
+                "name": "ICON_45X45",
+                "type": "png"
             },
             {
                 "file": "images/30x30.png",
@@ -48,16 +54,15 @@
                 "type": "png"
             },
             {
-                "file": "images/screenshot.png",
-                "menuIcon": true,
-                "name": "SCREEN_28x28",
-                "type": "png"
+                "file": "fonts/futura_condensed_bold-webfont.ttf",
+                "name": "FUTURA_CONDENSED_53",
+                "type": "font"
             },
             {
                 "characterRegex": "[0-9\u00b0 -]",
                 "file": "fonts/futura.ttf",
-                "name": "FUTURA_30",
-                "trackingAdjust": -3,
+                "name": "FUTURA_17",
+                "trackingAdjust": -2,
                 "type": "font"
             },
             {
@@ -70,14 +75,9 @@
             {
                 "characterRegex": "[0-9\u00b0 -]",
                 "file": "fonts/futura.ttf",
-                "name": "FUTURA_17",
-                "trackingAdjust": -2,
+                "name": "FUTURA_30",
+                "trackingAdjust": -3,
                 "type": "font"
-            },
-            {
-                "file": "images/45x45.png",
-                "name": "ICON_45X45",
-                "type": "png"
             }
         ]
     },
@@ -89,6 +89,6 @@
     "uuid": "6adb85a2-d3df-401a-be8b-83e30eb6364a",
     "versionLabel": "0.1",
     "watchapp": {
-        "watchface": true
+        "watchface": false
     }
 }
