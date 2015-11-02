@@ -23,8 +23,8 @@ var Global = {
 		bluetoothAlert: true,
 		batteryEnabled: true,
 		timesigEnabled: false,
-		tsStartTime:       7,
-		tsEndTime:         22,
+		tsStartTime:     7,
+		tsEndTime:      22,
 		backColor:		COLOR_DUKEBLUE,
 		weatherService: SERVICE_YAHOO_WEATHER,
 		weatherScale:   'F'
@@ -70,8 +70,8 @@ Pebble.addEventListener("appmessage", function(data) {
 		Global.config.debugEnabled   =  data.payload.debug   === 1;
 		Global.config.bluetoothAlert =  data.payload.bluetooth === 1;
 		Global.config.timesigEnabled =  data.payload.timesig === 1;
-		Global.config.tsStartTime    =  data.payload.tsstart;
-		Global.config.tsEndTime      =  data.payload.tsend;
+		Global.config.tsStartTime    =  (data.payload.tsstart >= 0 && data.payload.tsstart <= 23) ? data.payload.tsstart :  7;
+		Global.config.tsEndTime      =  (data.payload.tsend   >= 0 && data.payload.tsend   <= 23) ? data.payload.tsend   : 23;
 		Global.config.batteryEnabled =  data.payload.battery === 1;
 		Global.config.weatherScale   = (data.payload.scale   === 'C') ? 'C' : 'F';
 		Global.wuApiKey              =  window.localStorage.getItem('wuApiKey');
@@ -134,8 +134,8 @@ Pebble.addEventListener("webviewclosed", function(e) {
 			Global.config.debugEnabled   = settings.debug   === 'true';
 			Global.config.bluetoothAlert = settings.bluetooth === 'on';
 			Global.config.timesigEnabled = settings.timesig === 'on';
-			Global.config.tsStartTime    = settings.tsstart;
-			Global.config.tsEndTime      = settings.tsend;
+			Global.config.tsStartTime    = (settings.tsstart >= 0 && settings.tsstart <= 23) ? settings.tsstart :  7;
+			Global.config.tsEndTime      = (settings.tsend   >= 0 && settings.tsend   <= 23) ? settings.tsend   : 23;
 			Global.config.batteryEnabled = settings.battery === 'on';
 			Global.wuApiKey              = settings.wuApiKey;
 

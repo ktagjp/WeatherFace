@@ -61,8 +61,8 @@
             {
                 "characterRegex": "[0-9\u00b0 -]",
                 "file": "fonts/futura.ttf",
-                "name": "FUTURA_17",
-                "trackingAdjust": -2,
+                "name": "FUTURA_30",
+                "trackingAdjust": -3,
                 "type": "font"
             },
             {
@@ -75,8 +75,8 @@
             {
                 "characterRegex": "[0-9\u00b0 -]",
                 "file": "fonts/futura.ttf",
-                "name": "FUTURA_30",
-                "trackingAdjust": -3,
+                "name": "FUTURA_17",
+                "trackingAdjust": -2,
                 "type": "font"
             }
         ]
