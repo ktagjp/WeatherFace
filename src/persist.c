@@ -40,8 +40,10 @@ void load_persisted_values(WeatherData *weather_data)
   }
 
 // Vibration Start/End Time
-  weather_data->tsstart = persist_exists(KEY_VIBE_START_TIME) ? persist_read_bool(KEY_VIBE_START_TIME) : DEFAULT_VIBE_START_TIME; 
-  weather_data->tsend   = persist_exists(KEY_VIBE_END_TIME)   ? persist_read_bool(KEY_VIBE_END_TIME)   : DEFAULT_VIBE_END_TIME; 
+//  weather_data->tsstart = persist_exists(KEY_VIBE_START_TIME) ? persist_read_bool(KEY_VIBE_START_TIME) : DEFAULT_VIBE_START_TIME; 
+//  weather_data->tsend   = persist_exists(KEY_VIBE_END_TIME)   ? persist_read_bool(KEY_VIBE_END_TIME)   : DEFAULT_VIBE_END_TIME; 
+  weather_data->tsstart = persist_exists(KEY_VIBE_START_TIME) ? persist_read_int(KEY_VIBE_START_TIME) : DEFAULT_VIBE_START_TIME; 
+  weather_data->tsend   = persist_exists(KEY_VIBE_END_TIME)   ? persist_read_int(KEY_VIBE_END_TIME)   : DEFAULT_VIBE_END_TIME; 
 
   // Hourly Vibration
   weather_data->timesig = persist_exists(KEY_VIBE_TIME_SIGNAL) ? persist_read_bool(KEY_VIBE_TIME_SIGNAL) : DEFAULT_VIBE_TIME_SIGNAL; 
@@ -84,6 +86,8 @@ void store_persisted_values(WeatherData *weather_data)
   persist_write_bool(KEY_ALERT_BLUETOOTH, weather_data->bluetooth);
   persist_write_bool(KEY_VIBE_TIME_SIGNAL, weather_data->timesig);
   persist_write_bool(KEY_DISPLAY_BATTERY, weather_data->battery);
+//  persist_write_bool(KEY_VIBE_START_TIME, weather_data->tsstart);
+//  persist_write_bool(KEY_VIBE_END_TIME, weather_data->tsend);
   persist_write_int(KEY_VIBE_START_TIME, weather_data->tsstart);
   persist_write_int(KEY_VIBE_END_TIME, weather_data->tsend);
   persist_write_string(KEY_WEATHER_SERVICE, weather_data->service);
@@ -91,6 +95,6 @@ void store_persisted_values(WeatherData *weather_data)
   persist_write_string(KEY_WEATHER_SCALE, weather_data->scale);
 
 
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "PersistStore:  d:%d b:%d t:%d v:%d s:%s c:%s u:%s", 
-      weather_data->debug, weather_data->battery, weather_data->bluetooth, weather_data->timesig, weather_data->service, weather_data->color, weather_data->scale);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "PersistStore:  d:%d b:%d t:%d v:%d f:%d e:%d s:%s c:%s u:%s", 
+      weather_data->debug, weather_data->battery, weather_data->bluetooth, weather_data->timesig, weather_data->tsstart, weather_data->tsend, weather_data->service, weather_data->color, weather_data->scale);
 }

@@ -96,17 +96,10 @@ static void appmsg_in_received(DictionaryIterator *received, void *context) {
 		weather->bluetooth = (bool)bluetooth_tuple->value->int32;
 		weather->timesig   = (bool)timesig_tuple->value->int32;
 		
-		int tsstart = (int)ts_start_tuple->value->int32;
-		if (tsstart >= 0 && tsstart <= 23)
-			weather->tsstart = tsstart;
-		else
-			weather->tsstart = 7;
-
-		int tsend   = (int)ts_end_tuple->value->int32;
-		if (tsend >= 0 && tsend <= 23)
-			weather->tsend = tsend;
-		else
-			weather->tsend = 22;
+		int tsstart        = (int)ts_start_tuple->value->int32;
+		weather->tsstart   = (tsstart >= 0 && tsstart <= 23) ? tsstart :  7;
+		int tsend          = (int)ts_end_tuple->value->int32;
+		weather->tsend     = (tsend   >= 0 && tsend   <= 23) ? tsend   : 22;
 
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "Configuration serv:%s color:%s scale:%s debug:%i batt:%i bt:%i ts:%i tsstart:%i tsend:%i", 
 			weather->service, weather->color, weather->scale, weather->debug, weather->battery, weather->bluetooth,

@@ -6,7 +6,8 @@ var COLOR_BLACK				= "black";
 var COLOR_RED				= "red";		///// Add Background Color value
 var EXTERNAL_DEBUG_URL    = '';
 // var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone_add_startend_pho.html';		//////// Config URL for PHONE //////
-var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone_add_startend_emu.html';	//////// Config URL for EMULATOR //////
+// var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone_add_startend_emu.html';	//////// Config URL for EMULATOR //////
+var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone_add_startend_emu_bak.html';	//////// Config URL for EMULATOR //////
 
 var Global = {
 	externalDebug:     false, // POST logs to external server - dangerous! lat lon recorded
@@ -70,8 +71,8 @@ Pebble.addEventListener("appmessage", function(data) {
 		Global.config.debugEnabled   =  data.payload.debug   === 1;
 		Global.config.bluetoothAlert =  data.payload.bluetooth === 1;
 		Global.config.timesigEnabled =  data.payload.timesig === 1;
-		Global.config.tsStartTime    =  (data.payload.tsstart >= 0 && data.payload.tsstart <= 23) ? data.payload.tsstart :  7;
-		Global.config.tsEndTime      =  (data.payload.tsend   >= 0 && data.payload.tsend   <= 23) ? data.payload.tsend   : 23;
+		Global.config.tsStartTime    = (data.payload.tsstart >= 0 && data.payload.tsstart <= 23) ? data.payload.tsstart :  7;
+		Global.config.tsEndTime      = (data.payload.tsend   >= 0 && data.payload.tsend   <= 23) ? data.payload.tsend   : 22;
 		Global.config.batteryEnabled =  data.payload.battery === 1;
 		Global.config.weatherScale   = (data.payload.scale   === 'C') ? 'C' : 'F';
 		Global.wuApiKey              =  window.localStorage.getItem('wuApiKey');
@@ -135,7 +136,7 @@ Pebble.addEventListener("webviewclosed", function(e) {
 			Global.config.bluetoothAlert = settings.bluetooth === 'on';
 			Global.config.timesigEnabled = settings.timesig === 'on';
 			Global.config.tsStartTime    = (settings.tsstart >= 0 && settings.tsstart <= 23) ? settings.tsstart :  7;
-			Global.config.tsEndTime      = (settings.tsend   >= 0 && settings.tsend   <= 23) ? settings.tsend   : 23;
+			Global.config.tsEndTime      = (settings.tsend   >= 0 && settings.tsend   <= 23) ? settings.tsend   : 22;
 			Global.config.batteryEnabled = settings.battery === 'on';
 			Global.wuApiKey              = settings.wuApiKey;
 
@@ -154,7 +155,7 @@ Pebble.addEventListener("webviewclosed", function(e) {
 				battery:	Global.config.batteryEnabled ? 1 : 0,
 				timesig:	Global.config.timesigEnabled ? 1 : 0,
 				tsstart:	Global.config.tsStartTime,
-				tsend:		Global.config.tsStartTime,
+				tsend:		Global.config.tsEndTime
 			};
 
 			Pebble.sendAppMessage(config, ack, function(ev){

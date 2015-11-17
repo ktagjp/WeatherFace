@@ -63,6 +63,8 @@ typedef struct {
   bool battery;
   bool bluetooth;
   bool timesig;
+//  bool tsstart;
+//  bool tsend;
   int  tsstart;
   int  tsend;
 
