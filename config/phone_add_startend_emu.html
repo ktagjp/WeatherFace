@@ -110,16 +110,8 @@
 			</DIV>
 
 			<DIV data-role="fieldcontain">
-				<LABEL for="vibstart">Start of Vibration:</LABEL>  
-				<SELECT name="vibstart" id="vibstart" data-role="slider" data-mini="true">
-					<OPTION value="off">Off</OPTION>
-					<OPTION value="on">On</OPTION>
-				</SELECT>
-			</DIV>
-
-			<DIV data-role="fieldcontain">
-				<LABEL for="vibend">End of Vibration:</LABEL>  
-				<SELECT name="vibend" id="vibend" data-role="slider" data-mini="true">
+				<LABEL for="fliptsdisable">Disable Alert/Vibe 23:00 to 6:00 :</LABEL>  
+				<SELECT name="fliptsdisable" id="fliptsdisable" data-role="slider" data-mini="true">
 					<OPTION value="off">Off</OPTION>
 					<OPTION value="on">On</OPTION>
 				</SELECT>
@@ -154,8 +146,7 @@
 				'battery':   $("select[name=flipbattery]").prop('selectedIndex') ? 'on' : 'off',
 				'bluetooth': $("select[name=flipbluetooth]").prop('selectedIndex') ? 'on' : 'off',
 				'timesig':   $("select[name=fliptimesignal]").prop('selectedIndex') ? 'on' : 'off',
-				'tsstart':   $("select[name=vibstart]").prop('selectedIndex') ?  'on' : 'off',
-				'tsend':     $("select[name=vibend]").prop('selectedIndex') ?  'on' : 'off',
+				'tsdisable': $("select[name=fliptsdisable]").prop('selectedIndex') ?  'on' : 'off',
 				'debug':     $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
 				'wuApiKey':  $("select[name=fliphourly]").prop('selectedIndex')  ? $("#text-apikey").val() : null
 			};
@@ -276,22 +267,13 @@
 				flipTimesignal.prop('selectedIndex', 1);
 			}
 
-			var flipVibStart = $("select[name=vibstart]");
-			var tsstart = getURLParameter('f');
+			var flipTSdisable = $("select[name=fliptsdisable]");
+			var tsdisable = getURLParameter('v');
 
-			if (tsstart === 'off') {
-				flipVibStart.prop('selectedIndex', 0);
+			if (tsdisable === 'off') {
+				flipTSdisable.prop('selectedIndex', 0);
 			} else {
-				flipVibStart.prop('selectedIndex', 1);
-			}
-
-			var flipVibEnd = $("select[name=vibend]");
-			var tsend = getURLParameter('e');
-
-			if (tsend === 'off') {
-				flipVibEnd.prop('selectedIndex', 0);
-			} else {
-				flipVibEnd.prop('selectedIndex', 1);
+				flipTSdisable.prop('selectedIndex', 1);
 			}
 
 			var flipDebug = $("select[name=flipdebug]");
