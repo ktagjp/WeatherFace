@@ -109,11 +109,12 @@
 				</SELECT>
 			</DIV>
 
-			<DIV id="vibetime" data-role="fieldcontain" data-mini="true">
-				<DIV class="ui-field-contain">
-					<LABEL for="text-vibetime">Weather Underground API Key:</LABEL>
-					<INPUT name="text-vibetime" id="text-vibetime" type="text" autocomplete="off" autocorrect="off" autocapitalize="off"> 
-				</DIV>
+			<DIV data-role="fieldcontain">
+				<LABEL for="flipstophourly">Stop Hourly Vibration at night(PM11 to AM6):</LABEL>  
+				<SELECT name="flipstophourly" id="flipstophourly" data-role="slider" data-mini="true">
+					<OPTION value="off">Off</OPTION>
+					<OPTION value="on">On</OPTION>
+				</SELECT>
 			</DIV>
 
 			<DIV data-role="fieldcontain">
@@ -145,8 +146,8 @@
 				'battery':    $("select[name=flipbattery]").prop('selectedIndex') ? 'on' : 'off',
 				'bluetooth':  $("select[name=flipbluetooth]").prop('selectedIndex') ? 'on' : 'off',
 				'timesig':    $("select[name=fliptimesignal]").prop('selectedIndex') ? 'on' : 'off',
+				'stophourly': $("select[name=flipstophourly]").prop('selectedIndex') ? 'on' : 'off',
 				'debug':      $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
-				'tsVibetime': $("select[name=fliptimesignal]").prop('selectedIndex')  ? $("#text-vibetime").val() : null,
 				'wuApiKey':   $("select[name=fliphourly]").prop('selectedIndex')  ? $("#text-apikey").val() : null
 			};
 		}
@@ -191,19 +192,6 @@
 					}
 				} else {
 					$("#apikey").hide();
-				}
-			});
-
-			var flipTimesignal = $("select[name=fliptimesignal]");
-
-			flipTimesignal.bind( "change", function(event, ui) {
-
-				var val = $(this).val();
-
-				if (val === 'on') {
-					$("#vibetime").show();
-				} else {
-					$("#vibetime").hide();
 				}
 			});
 
@@ -279,9 +267,14 @@
 				flipTimesignal.prop('selectedIndex', 1);
 			}
 
+			var flipstophourly = $("select[name=flipstophourly]");
+			var stophourly = getURLParameter('o');
 
-			flipHourly.change();
-
+			if (stophourly === 'off') {
+				flipstophourly.prop('selectedIndex', 0);
+			} else {
+				flipstophourly.prop('selectedIndex', 1);
+			}
 
 			var flipDebug = $("select[name=flipdebug]");
 			var debug = getURLParameter('d');
