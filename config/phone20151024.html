@@ -94,8 +94,16 @@
 			</DIV>
 
 			<DIV data-role="fieldcontain">
-				<LABEL for="flipbluetooth">Bluetooth Connection/Disconnection Alert:</LABEL>  
+				<LABEL for="flipbluetooth">Bluetooth Connection Alert:</LABEL>  
 				<SELECT name="flipbluetooth" id="flipbluetooth" data-role="slider" data-mini="true">
+					<OPTION value="off">Off</OPTION>
+					<OPTION value="on">On</OPTION>
+				</SELECT>
+			</DIV>
+
+			<DIV data-role="fieldcontain">
+				<LABEL for="fliptimesignal">Hourly Vibration:</LABEL>  
+				<SELECT name="fliptimesignal" id="fliptimesignal" data-role="slider" data-mini="true">
 					<OPTION value="off">Off</OPTION>
 					<OPTION value="on">On</OPTION>
 				</SELECT>
@@ -129,6 +137,7 @@
 				'scale':     $("#radioF").is(':checked')     ? 'F' : 'C',
 				'battery':   $("select[name=flipbattery]").prop('selectedIndex') ? 'on' : 'off',
 				'bluetooth': $("select[name=flipbluetooth]").prop('selectedIndex') ? 'on' : 'off',
+				'timesig'  : $("select[name=fliptimesignal]").prop('selectedIndex') ? 'on' : 'off',
 				'debug':     $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
 				'wuApiKey':  $("select[name=fliphourly]").prop('selectedIndex')  ? $("#text-apikey").val() : null
 			};
@@ -221,6 +230,15 @@
 				flipBluetooth.prop('selectedIndex', 0);
 			} else {
 				flipBluetooth.prop('selectedIndex', 1);
+			}
+
+			var flipTimesignal = $("select[name=fliptimesignal]");
+			var timesig = getURLParameter('v');
+
+			if (timesig === 'off') {
+				flipTimesignal.prop('selectedIndex', 0);
+			} else {
+				flipTimesignal.prop('selectedIndex', 1);
 			}
 
 			var flipDebug = $("select[name=flipdebug]");

@@ -1,0 +1,293 @@
+﻿<!DOCTYPE HTML>
+<!DOCTYPE html PUBLIC "" "">
+
+<HTML>
+
+<HEAD>
+
+<META content="IE=11.0000" http-equiv="X-UA-Compatible">
+
+     <TITLE>Weather Face Configuration</TITLE>
+
+<META charset="utf-8">     
+<META name="viewport" content="width=device-width, initial-scale=1">
+<LINK href="WeatherFaceConfiguration.files/jquery.mobile.min.css" rel="stylesheet"> 
+
+<STYLE> #apikey { display: none;} </STYLE>
+
+<SCRIPT src="WeatherFaceConfiguration.files/jquery.min.js"></SCRIPT>
+
+<SCRIPT src="WeatherFaceConfiguration.files/jquery.mobile.min.js"></SCRIPT>
+
+</HEAD> 
+
+<BODY>
+	<DIV id="main" data-role="page">
+		<DIV class="ui-body ui-body-a" data-role="content">
+
+			<p>This config page is for EMULATOR.</p>
+
+			<DIV data-role="fieldcontain">
+				<FIELDSET data-role="controlgroup" data-mini="true">
+					<LEGEND>Weather Provider:</LEGEND>
+					<INPUT name="weather-service" class="custom" id="radioyahoo"   type="radio" value="yahoo">
+						<LABEL for="radioyahoo">YAHOO! Weather</LABEL>
+					<INPUT name="weather-service" class="custom" id="radioopen"    type="radio" value="open">
+						<LABEL for="radioopen">Open Weather Map</LABEL>
+					<INPUT name="weather-service" class="custom" id="radiowundr"  type="radio" value="wundr">
+						<LABEL for="radiowundr">Weather Undergroundp (API KEY required)</LABEL>
+				</FIELDSET>
+			</DIV>
+
+			<DIV data-role="fieldcontain">
+				<FIELDSET data-role="controlgroup" data-mini="true">
+					<LEGEND>Background color:</LEGEND>
+					<INPUT name="bg-color" class="custom" id="radioduke"   type="radio" value="duke">
+						<LABEL for="radioduke">Duke Blue</LABEL>
+					<INPUT name="bg-color" class="custom" id="radioblack"    type="radio" value="black">
+						<LABEL for="radioblack">Black</LABEL>
+					<INPUT name="bg-color" class="custom" id="radiored"  type="radio" value="red">
+						<LABEL for="radiored">Red</LABEL>
+				</FIELDSET>
+			</DIV>
+
+			<DIV data-role="fieldcontain">
+				<LABEL for="fliphourly">Hourly Weather (requires key):</LABEL>
+				<SELECT name="fliphourly" id="fliphourly" data-role="slider" data-mini="true">
+					<OPTION value="off">Off</OPTION>
+					<OPTION value="on">On</OPTION>
+				</SELECT>
+			</DIV>
+
+			<DIV class="ui-content" id="popupCloseRight" data-role="popup">
+				<A class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right" 
+					href="http://ktagjp.github.io/WeatherFace/config/#" data-rel="back">Close</A>
+
+				<P>Hourly weather requires a Weather Underground API key.</P>
+				<P>Weather Underground provides a free Developer API key, but you must first sign up.
+					You can <A href="http://www.wunderground.com/weather/api/">sign up here.</A></P>
+			</DIV>
+
+			<DIV id="apikey" data-role="fieldcontain" data-mini="true">
+				<DIV class="ui-field-contain">
+					<LABEL for="text-apikey">Weather Underground API Key:</LABEL>
+					<INPUT name="text-apikey" id="text-apikey" type="text" autocomplete="off" autocorrect="off" autocapitalize="off"> 
+				</DIV>
+			</DIV>
+
+			<DIV data-role="fieldcontain">
+				<FIELDSET data-role="controlgroup" data-mini="true" data-type="horizontal">
+					<LEGEND>Temperature Scale:</LEGEND>                 
+					<INPUT name="weather-scale" class="custom" id="radioF" type="radio" value="F">   
+             		<LABEL for="radioF">°Fahrenheit</LABEL>
+					<INPUT name="weather-scale" class="custom" id="radioC" type="radio" value="C">          
+					<LABEL for="radioC">°Celsius</LABEL>
+				</FIELDSET>
+			</DIV>
+
+			<DIV data-role="fieldcontain">
+				<LABEL for="flipbattery">Display Battery:</LABEL>  
+				<SELECT name="flipbattery" id="flipbattery" data-role="slider" data-mini="true">
+					<OPTION value="off">Off</OPTION>
+					<OPTION value="on">On</OPTION>
+				</SELECT>
+			</DIV>
+
+			<DIV data-role="fieldcontain">
+				<LABEL for="flipbluetooth">Bluetooth Connection Alert:</LABEL>  
+				<SELECT name="flipbluetooth" id="flipbluetooth" data-role="slider" data-mini="true">
+					<OPTION value="off">Off</OPTION>
+					<OPTION value="on">On</OPTION>
+				</SELECT>
+			</DIV>
+
+			<DIV data-role="fieldcontain">
+				<LABEL for="fliptimesignal">Hourly Vibration:</LABEL>  
+				<SELECT name="fliptimesignal" id="fliptimesignal" data-role="slider" data-mini="true">
+					<OPTION value="off">Off</OPTION>
+					<OPTION value="on">On</OPTION>
+				</SELECT>
+			</DIV>
+
+			<DIV data-role="fieldcontain">
+				<LABEL for="flipdebug">Debug Mode:</LABEL>
+			    <SELECT name="flipdebug" id="flipdebug" data-role="slider" data-mini="true">
+					<OPTION value="off">Off</OPTION>
+					<OPTION value="on">On</OPTION>
+				</SELECT>
+			</DIV>
+
+			<FIELDSET class="ui-grid-a">
+				<DIV class="ui-block-a">
+					<BUTTON id="b-cancel" type="submit" data-theme="d">Cancel</BUTTON>
+				</DIV>
+
+				<DIV class="ui-block-b">
+					<BUTTON id="b-submit" type="submit" data-theme="b">Save</BUTTON>
+				</DIV>
+			</FIELDSET>
+		</DIV>
+	</DIV>
+
+	<SCRIPT>
+		function saveOptions() {
+			return {
+				'service':   $("#radioyahoo").is(':checked') ? 'yahoo' : $("#radioopen").is(':checked') ? 'open' : 'wundr',
+				'color':     $("#radioduke").is(':checked') ? 'duke' : $("#radioblack").is(':checked') ? 'black' : 'red',
+				'scale':     $("#radioF").is(':checked')     ? 'F' : 'C',
+				'battery':   $("select[name=flipbattery]").prop('selectedIndex') ? 'on' : 'off',
+				'bluetooth': $("select[name=flipbluetooth]").prop('selectedIndex') ? 'on' : 'off',
+				'timesig'  : $("select[name=fliptimesignal]").prop('selectedIndex') ? 'on' : 'off',
+				'debug':     $("select[name=flipdebug]").prop('selectedIndex')   ? 'true' : 'false',
+				'wuApiKey':  $("select[name=fliphourly]").prop('selectedIndex')  ? $("#text-apikey").val() : null
+			};
+		}
+
+		function getURLParameter(name) {
+			return decodeURI(
+				(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+			);
+		}
+
+		// Get query variables
+		function getQueryParam(variable, defaultValue) {
+			// Find all URL parameters
+			var query = location.search.substring(1);
+			var vars = query.split('&');
+			for (var i = 0; i < vars.length; i++) {
+				var pair = vars[i].split('=');
+
+				// If the query variable parameter is found, decode it to use and return it for use
+				if (pair[0] === variable) {
+					return decodeURIComponent(pair[1]);
+				}
+			}
+			return defaultValue || false;
+		}
+
+
+		$().ready(function() {
+
+			var initialLoad = true;
+
+			var flipHourly = $("select[name=fliphourly]");
+
+			flipHourly.bind( "change", function(event, ui) {
+
+				var val = $(this).val();
+
+				if (val === 'on') {
+					$("#apikey").show();
+					if (!initialLoad) {
+						$("#popupCloseRight").popup("open");
+					}
+				} else {
+					$("#apikey").hide();
+				}
+			});
+
+			var service = getURLParameter('s');
+
+			if (service === 'open') {
+				$("#radioopen").attr("checked", "checked");
+			} else if (service === 'yahoo') {
+				$("#radioyahoo").attr("checked", "checked");
+			} else {
+				$("#radiowundr").attr("checked", "checked");
+			}
+
+			$("input[name='weather-service']").checkboxradio("refresh");
+
+			var color = getURLParameter('c');
+
+			if (color === 'duke') {
+				$("#radioduke").attr("checked", "checked");
+			} else if (color === 'black') {
+				$("#radioblack").attr("checked", "checked");
+			} else {
+				$("#radiored").attr("checked", "checked");
+			}
+
+			$("input[name='bg-color']").checkboxradio("refresh");
+
+			var scale = getURLParameter('u');
+
+			if (scale === 'C') {
+				$("#radioC").attr("checked", "checked");
+			} else {
+				$("#radioF").attr("checked", "checked");
+			}
+
+			$("input[name='weather-scale']").checkboxradio("refresh");
+
+			var apikey = getURLParameter('a');
+
+			if (apikey !== 'null') {
+				flipHourly.prop('selectedIndex', 1);
+				$("#text-apikey").val(apikey);
+			} else {
+				flipHourly.prop('selectedIndex', 0);
+			}
+
+			flipHourly.change();
+
+			var flipBattery = $("select[name=flipbattery]");
+			var battery = getURLParameter('b');
+
+			if (battery === 'off') {
+				flipBattery.prop('selectedIndex', 0);
+			} else {
+				flipBattery.prop('selectedIndex', 1);
+			}
+
+			var flipBluetooth = $("select[name=flipbluetooth]");
+			var bluetooth = getURLParameter('t');
+
+			if (bluetooth === 'off') {
+				flipBluetooth.prop('selectedIndex', 0);
+			} else {
+				flipBluetooth.prop('selectedIndex', 1);
+			}
+
+			var flipTimesignal = $("select[name=fliptimesignal]");
+			var timesig = getURLParameter('v');
+
+			if (timesig === 'off') {
+				flipTimesignal.prop('selectedIndex', 0);
+			} else {
+				flipTimesignal.prop('selectedIndex', 1);
+			}
+
+			var flipDebug = $("select[name=flipdebug]");
+			var debug = getURLParameter('d');
+
+			if (debug === 'true') {
+				flipDebug.prop('selectedIndex', 1);
+			} else {
+				flipDebug.prop('selectedIndex', 0);
+			}
+
+			$("select").slider("refresh");
+
+			$("#b-cancel").click(function() {
+				console.log("Cancel");
+				document.location = "pebblejs://close";
+			});
+
+			$("#b-submit").click(function() {
+				console.log("Submit");
+
+				var returnTo = getQueryParam('return_to', 'pebblejs://close#');
+				var location = returnTo + encodeURIComponent(JSON.stringify(saveOptions()));
+				console.log("Warping to: " + location);
+				console.log(location);
+				document.location = location;
+			});
+
+			initialLoad = false;
+		});
+	</SCRIPT>
+
+ </BODY>
+
+</HTML>
