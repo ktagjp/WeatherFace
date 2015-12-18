@@ -311,11 +311,20 @@ var fetchOpenWeather = function(latitude, longitude) {
 var fetchWunderWeather = function(latitude, longitude) {
 
 	var sunrise, sunset, pubdate, options = {};
-	var tz_offset, unixtime, date, year, month, day, hour, min;
+	var temperature, tz_offset, unixtime, date, year, month, day, hour, min;
 
 	options.url = 'http://api.wunderground.com/api/'+Global.wuApiKey+'/astronomy/conditions/q/'+latitude+','+longitude+'.json';
 
 	options.parse = function(response) {
+      if (Global.config.weatherScale === 'C') {
+        // Convert temperature to Celsius
+        temperature = response.current_observation.temp_c;
+      } 
+      else {
+        // Otherwise, convert temperature to Fahrenheit 
+        temperature = response.current_observation.temp_f;
+      }
+
 		tz_offset = (parseInt(response.current_observation.local_tz_offset) / 100) * 3600;		// tz_offset is not used.
 		unixtime = parseInt(response.current_observation.observation_epoch);					// "unixtime" is not actual Unix Time but Local Time in unix time form
 		date = new Date(unixtime * 1000);
@@ -339,7 +348,7 @@ var fetchWunderWeather = function(latitude, longitude) {
 
 		return {
 				condition:		Wunder_Comvert(response.current_observation.icon),
-				temperature:	response.current_observation.temp_c,
+				temperature:	temperature,
 				sunrise:		sunrise,
 				sunset:			sunset,
 				locale:			response.current_observation.display_location.city,
