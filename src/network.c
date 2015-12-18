@@ -8,7 +8,6 @@
 #include "weather_layer.h"
 #include "debug_layer.h"
 #include "main.h"
-#include "config.h"
 #include "persist.h"
 
 const  int MAX_RETRY = 2;
@@ -40,8 +39,8 @@ static void appmsg_in_received(DictionaryIterator *received, void *context) {
 	Tuple *battery_tuple     = dict_find(received, KEY_BATTERY);
 	Tuple *bluetooth_tuple   = dict_find(received, KEY_BLUETOOTH);
 	Tuple *timesig_tuple     = dict_find(received, KEY_TIME_SIGNAL);
-	Tuple *ts_start_tuple    = dict_find(received, KEY_TS_START);
-	Tuple *ts_end_tuple      = dict_find(received, KEY_TS_END);
+	Tuple *stophourly_tuple  = dict_find(received, KEY_STOP_HOURLY);
+//	Tuple *ts_end_tuple      = dict_find(received, KEY_TS_END);
 
 	// Hourly Weather
 	Tuple *h1_temp_tuple = dict_find(received, KEY_H1_TEMP);
@@ -91,23 +90,33 @@ static void appmsg_in_received(DictionaryIterator *received, void *context) {
 		strncpy(weather->color, color, 6);
 		strncpy(weather->scale, scale, 2);
 
-		weather->debug     = (bool)debug_tuple->value->int32;
-		weather->battery   = (bool)battery_tuple->value->int32;
-		weather->bluetooth = (bool)bluetooth_tuple->value->int32;
-		weather->timesig   = (bool)timesig_tuple->value->int32;
+		weather->debug		= (bool)debug_tuple->value->int32;
+		weather->battery	= (bool)battery_tuple->value->int32;
+		weather->bluetooth	= (bool)bluetooth_tuple->value->int32;
+		weather->timesig	= (bool)timesig_tuple->value->int32;
+		weather->stophourly	= (bool)stophourly_tuple->value->int32;
+
+//		char **endptr = NULL;
 		
-		int tsstart        = (int)ts_start_tuple->value->int32;
-		weather->tsstart   = (tsstart >= 0 && tsstart <= 23) ? tsstart :  7;
-		int tsend          = (int)ts_end_tuple->value->int32;
-		weather->tsend     = (tsend   >= 0 && tsend   <= 23) ? tsend   : 22;
+//		int tsstart = (int)strtol(ts_start_tuple->value->cstring, endptr, 10);
+//		if (tsstart >= 0 && tsstart <= 23 && errno != ERANGE)
+//			weather->tsstart = tsstart;
+//		else
+//			weather->tsstart = 7;
+//
+//		int tsend   = (int)strtol(ts_end_tuple->value->cstring, endptr, 10);
+//		if (tsend >= 0 && tsend <= 23 && errno != ERANGE)
+//			weather->tsend = tsend;
+//		else
+//			weather->tsend = 22;
 
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "Configuration serv:%s color:%s scale:%s debug:%i batt:%i bt:%i ts:%i tsstart:%i tsend:%i", 
-			weather->service, weather->color, weather->scale, weather->debug, weather->battery, weather->bluetooth,
-			weather->timesig, weather->tsstart, weather->tsend);
-
-//		APP_LOG(APP_LOG_LEVEL_DEBUG, "Configuration serv:%s color:%s scale:%s debug:%i batt:%i bt:%i ts:%i", 
+//		APP_LOG(APP_LOG_LEVEL_DEBUG, "Configuration serv:%s color:%s scale:%s debug:%i batt:%i bt:%i ts:%i tsstart:%i tsend:%i", 
 //			weather->service, weather->color, weather->scale, weather->debug, weather->battery, weather->bluetooth,
-//			weather->timesig);
+//			weather->timesig, weather->tsstart, weather->tsend);
+
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Configuration serv:%s color:%s scale:%s debug:%i batt:%i bt:%i ts:%i  st:%i", 
+			weather->service, weather->color, weather->scale, weather->debug, weather->battery, weather->bluetooth,
+			weather->timesig, weather->stophourly);
 
 		if (weather->battery) {
 			battery_enable_display();
@@ -122,6 +131,13 @@ static void appmsg_in_received(DictionaryIterator *received, void *context) {
 		}
 
 		if (weather->timesig) {
+			if (weather->stophourly) {
+				weather->tsstart = 7;
+				weather->tsend   = 22;
+			} else {
+				weather->tsstart = 0;
+				weather->tsend   = 0;
+			}
 			set_time_signal(weather->tsstart, weather->tsend);
 			enable_time_signal();
 		} else {
@@ -148,7 +164,7 @@ static void appmsg_in_received(DictionaryIterator *received, void *context) {
 		weather->h1_pop  = h1_pop_tuple->value->int32;
 		weather->h2_temp = h2_temp_tuple->value->int32;
 		weather->h2_cond = h2_cond_tuple->value->int32;
-		time_t h2_time   = h2_time_tuple->value->int32;
+		time_t h2_time = h2_time_tuple->value->int32;
 		struct tm *h2_tm = localtime(&h2_time);
 		weather->h2_time = mktime(h2_tm);
 		weather->h2_pop  = h2_pop_tuple->value->int32;
@@ -297,8 +313,7 @@ void request_weather(WeatherData *weather_data) {
 	dict_write_uint8(iter, KEY_BATTERY, (uint8_t)weather_data->battery);
 	dict_write_uint8(iter, KEY_BLUETOOTH, (uint8_t)weather_data->bluetooth);
 	dict_write_uint8(iter, KEY_TIME_SIGNAL, (uint8_t)weather_data->timesig);
-	dict_write_uint8(iter, KEY_TS_START, (uint8_t)weather_data->tsstart);
-	dict_write_uint8(iter, KEY_TS_END, (uint8_t)weather_data->tsend);
+	dict_write_uint8(iter, KEY_STOP_HOURLY, (uint8_t)weather_data->stophourly);
 
 	dict_write_end(iter);
 

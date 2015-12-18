@@ -5,13 +5,14 @@ var COLOR_DUKEBLUE			= "duke";
 var COLOR_BLACK				= "black";
 var COLOR_RED				= "red";		///// Add Background Color value
 var EXTERNAL_DEBUG_URL    = '';
-// var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone_add_startend_pho.html';		//////// Config URL for PHONE //////
-// var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone_add_startend_emu.html';	//////// Config URL for EMULATOR //////
-var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone_add_startend_emu_bak.html';	//////// Config URL for EMULATOR //////
+// var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone20151218.html';		//////// Config URL for PHONE //////
+var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/emulator20151218.html';	//////// Config URL for EMULATOR //////
 
 var Global = {
 	externalDebug:     false, // POST logs to external server - dangerous! lat lon recorded
 	wuApiKey:          null, // register for a free api key!
+	tsStartTime:       7,
+	tsEndTime:         22,
 	hourlyIndex1:      2, // 3 Hours from now 
 	hourlyIndex2:      5, // 6 hours from now                                  //////// Change to 5 from 8 ////////
 	updateInProgress:  false,
@@ -24,8 +25,7 @@ var Global = {
 		bluetoothAlert: true,
 		batteryEnabled: true,
 		timesigEnabled: false,
-		tsStartTime:     7,
-		tsEndTime:      22,
+		stopHourly:		false,
 		backColor:		COLOR_DUKEBLUE,
 		weatherService: SERVICE_YAHOO_WEATHER,
 		weatherScale:   'F'
@@ -71,11 +71,12 @@ Pebble.addEventListener("appmessage", function(data) {
 		Global.config.debugEnabled   =  data.payload.debug   === 1;
 		Global.config.bluetoothAlert =  data.payload.bluetooth === 1;
 		Global.config.timesigEnabled =  data.payload.timesig === 1;
-		Global.config.tsStartTime    = (data.payload.tsstart >= 0 && data.payload.tsstart <= 23) ? data.payload.tsstart :  7;
-		Global.config.tsEndTime      = (data.payload.tsend   >= 0 && data.payload.tsend   <= 23) ? data.payload.tsend   : 22;
+		Global.config.stopHourly	 =  data.payload.stophourly === 1;
 		Global.config.batteryEnabled =  data.payload.battery === 1;
 		Global.config.weatherScale   = (data.payload.scale   === 'C') ? 'C' : 'F';
 		Global.wuApiKey              =  window.localStorage.getItem('wuApiKey');
+//		Global.tsStartTime           =  window.localStorage.getItem('tsStartTime');
+//		Global.tsEndTime             =  window.localStorage.getItem('tsEndTime');
 		updateWeather();
 	} catch (ex) {
       console.warn("Could not retrieve data sent from Pebble: "+ex.message);
@@ -95,9 +96,10 @@ Pebble.addEventListener("showConfiguration", function (e) {
 		'b': Global.config.batteryEnabled ? 'on' : 'off',
 		't': Global.config.bluetoothAlert ? 'on' : 'off',
 		'v': Global.config.timesigEnabled ? 'on' : 'off',
-		'f': Global.config.tsStartTime,
-		'e': Global.config.tsEndTime,
+		'o': Global.config.stopHourly	  ? 'on' : 'off',
 		'a': Global.wuApiKey
+//		'f': Global.tsStartTime,
+//		'e': Global.tsEndTime
 	};
 	var url = CONFIGURATION_URL+'?'+serialize(options);
 	console.log('Configuration requested using url: '+url);
@@ -135,17 +137,18 @@ Pebble.addEventListener("webviewclosed", function(e) {
 			Global.config.debugEnabled   = settings.debug   === 'true';
 			Global.config.bluetoothAlert = settings.bluetooth === 'on';
 			Global.config.timesigEnabled = settings.timesig === 'on';
-			Global.config.tsStartTime    = (settings.tsstart >= 0 && settings.tsstart <= 23) ? settings.tsstart :  7;
-			Global.config.tsEndTime      = (settings.tsend   >= 0 && settings.tsend   <= 23) ? settings.tsend   : 22;
+			Global.config.stopHourly	 = settings.stophourly === 'on';
 			Global.config.batteryEnabled = settings.battery === 'on';
 			Global.wuApiKey              = settings.wuApiKey;
+//			Global.tsStartTime           = settings.StartSig;
+//			Global.tsEndTime             = settings.Endsig;
 
 			if (Global.wuApiKey !== null) {
 				window.localStorage.setItem('wuApiKey', Global.wuApiKey);
 			} else {
 				window.localStorage.removeItem('wuApiKey');
 			}
-
+        
 			var config = {
 				service:	Global.config.weatherService,
 				color:		Global.config.backColor,
@@ -154,8 +157,7 @@ Pebble.addEventListener("webviewclosed", function(e) {
 				bluetooth:	Global.config.bluetoothAlert ? 1 : 0,
 				battery:	Global.config.batteryEnabled ? 1 : 0,
 				timesig:	Global.config.timesigEnabled ? 1 : 0,
-				tsstart:	Global.config.tsStartTime,
-				tsend:		Global.config.tsEndTime
+				stophourly: Global.config.stopHourly 	 ? 1 : 0
 			};
 
 			Pebble.sendAppMessage(config, ack, function(ev){

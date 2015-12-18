@@ -39,22 +39,24 @@ void load_persisted_values(WeatherData *weather_data)
     bluetooth_disable_alert();
   }
 
-// Vibration Start/End Time
-//  weather_data->tsstart = persist_exists(KEY_VIBE_START_TIME) ? persist_read_bool(KEY_VIBE_START_TIME) : DEFAULT_VIBE_START_TIME; 
-//  weather_data->tsend   = persist_exists(KEY_VIBE_END_TIME)   ? persist_read_bool(KEY_VIBE_END_TIME)   : DEFAULT_VIBE_END_TIME; 
-  weather_data->tsstart = persist_exists(KEY_VIBE_START_TIME) ? persist_read_int(KEY_VIBE_START_TIME) : DEFAULT_VIBE_START_TIME; 
-  weather_data->tsend   = persist_exists(KEY_VIBE_END_TIME)   ? persist_read_int(KEY_VIBE_END_TIME)   : DEFAULT_VIBE_END_TIME; 
-
   // Hourly Vibration
-  weather_data->timesig = persist_exists(KEY_VIBE_TIME_SIGNAL) ? persist_read_bool(KEY_VIBE_TIME_SIGNAL) : DEFAULT_VIBE_TIME_SIGNAL; 
+  weather_data->timesig		= persist_exists(KEY_VIBE_TIME_SIGNAL)	? persist_read_bool(KEY_VIBE_TIME_SIGNAL)	: DEFAULT_VIBE_TIME_SIGNAL; 
+  weather_data->stophourly	= persist_exists(KEY_VIBE_STOP_HOURLY)	? persist_read_bool(KEY_VIBE_STOP_HOURLY)	: DEFAULT_VIBE_STOP_HOURLY; 
 
   if (weather_data->timesig) {
-	set_time_signal(weather_data->tsstart, weather_data->tsend);
-	enable_time_signal();
+    if (weather_data->stophourly) {
+      weather_data->tsstart = 7;
+      weather_data->tsend   = 22;
+    } else {
+      weather_data->tsstart = 0;
+      weather_data->tsend   = 0;
+    }
+    set_time_signal(weather_data->tsstart, weather_data->tsend);
+    enable_time_signal();
   } else {
     disable_time_signal();
   }
-  
+
   // Weather Service
   if (persist_exists(KEY_WEATHER_SERVICE)) {
     persist_read_string(KEY_WEATHER_SERVICE, weather_data->service, sizeof(weather_data->service));
@@ -76,25 +78,22 @@ void load_persisted_values(WeatherData *weather_data)
     strcpy(weather_data->scale, DEFAULT_WEATHER_SCALE);
   }
 
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "PersistLoad:  d:%d b:%d t:%d v:%d s:%s c:%s u:%s", 
-      weather_data->debug, weather_data->battery, weather_data->bluetooth, weather_data->timesig, weather_data->service, weather_data->color, weather_data->scale);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "PersistLoad:  d:%d b:%d t:%d v:%d o:%d s:%s c:%s u:%s", 
+      weather_data->debug, weather_data->battery, weather_data->bluetooth, weather_data->timesig, weather_data->stophourly, weather_data->service, weather_data->color, weather_data->scale);
 }
 
 void store_persisted_values(WeatherData *weather_data) 
 {
-  persist_write_bool(KEY_DEBUG_MODE, weather_data->debug);
-  persist_write_bool(KEY_ALERT_BLUETOOTH, weather_data->bluetooth);
-  persist_write_bool(KEY_VIBE_TIME_SIGNAL, weather_data->timesig);
-  persist_write_bool(KEY_DISPLAY_BATTERY, weather_data->battery);
-//  persist_write_bool(KEY_VIBE_START_TIME, weather_data->tsstart);
-//  persist_write_bool(KEY_VIBE_END_TIME, weather_data->tsend);
-  persist_write_int(KEY_VIBE_START_TIME, weather_data->tsstart);
-  persist_write_int(KEY_VIBE_END_TIME, weather_data->tsend);
-  persist_write_string(KEY_WEATHER_SERVICE, weather_data->service);
-  persist_write_string(KEY_FACE_COLOR, weather_data->color);
-  persist_write_string(KEY_WEATHER_SCALE, weather_data->scale);
+  persist_write_bool(KEY_DEBUG_MODE,		weather_data->debug);
+  persist_write_bool(KEY_ALERT_BLUETOOTH,	weather_data->bluetooth);
+  persist_write_bool(KEY_VIBE_TIME_SIGNAL,	weather_data->timesig);
+  persist_write_bool(KEY_VIBE_STOP_HOURLY,	weather_data->stophourly);
+  persist_write_bool(KEY_DISPLAY_BATTERY,	weather_data->battery);
+  persist_write_string(KEY_WEATHER_SERVICE,	weather_data->service);
+  persist_write_string(KEY_FACE_COLOR,		weather_data->color);
+  persist_write_string(KEY_WEATHER_SCALE,	weather_data->scale);
 
 
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "PersistStore:  d:%d b:%d t:%d v:%d f:%d e:%d s:%s c:%s u:%s", 
-      weather_data->debug, weather_data->battery, weather_data->bluetooth, weather_data->timesig, weather_data->tsstart, weather_data->tsend, weather_data->service, weather_data->color, weather_data->scale);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "PersistStore:  d:%d b:%d t:%d v:%d o:%d s:%s c:%s u:%s", 
+      weather_data->debug, weather_data->battery, weather_data->bluetooth, weather_data->timesig, weather_data->stophourly, weather_data->service, weather_data->color, weather_data->scale);
 }
