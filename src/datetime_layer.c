@@ -32,13 +32,13 @@ void TimeSignal(void) {
 
 	if (currentLocalTime->tm_min == 0 && Is_TimeSignal_Enable) {
 		if (ts_start_time == ts_end_time) {
-			vibes_enqueue_custom_pattern(pat);  //  When BT is lost connection, vibrate three times.
+			vibes_enqueue_custom_pattern(pat); 		 //  When BT is lost connection, vibrate three times.
 		} else if (ts_start_time < ts_end_time) {
 			if (currentLocalTime->tm_hour >= ts_start_time && currentLocalTime->tm_hour <= ts_end_time)
-				vibes_enqueue_custom_pattern(pat);  //  When BT is lost connection, vibrate three times.
+				vibes_enqueue_custom_pattern(pat);   //  When BT is lost connection, vibrate three times.
 		} else {
 			if (currentLocalTime->tm_hour >= ts_start_time || currentLocalTime->tm_hour <= ts_end_time)
-				vibes_enqueue_custom_pattern(pat);  //  When BT is lost connection, vibrate three times.
+				vibes_enqueue_custom_pattern(pat);   //  When BT is lost connection, vibrate three times.
 		}
 	}
 }

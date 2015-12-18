@@ -5,8 +5,8 @@ var COLOR_DUKEBLUE			= "duke";
 var COLOR_BLACK				= "black";
 var COLOR_RED				= "red";		///// Add Background Color value
 var EXTERNAL_DEBUG_URL    = '';
-var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone.html';		//////// Config URL for PHONE //////
-// var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/emulator.html';	//////// Config URL for EMULATOR //////
+// var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone20151218.html';		//////// Config URL for PHONE //////
+var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/emulator20151218.html';	//////// Config URL for EMULATOR //////
 
 var Global = {
 	externalDebug:     false, // POST logs to external server - dangerous! lat lon recorded
@@ -25,6 +25,7 @@ var Global = {
 		bluetoothAlert: true,
 		batteryEnabled: true,
 		timesigEnabled: false,
+		stopHourly:		false,
 		backColor:		COLOR_DUKEBLUE,
 		weatherService: SERVICE_YAHOO_WEATHER,
 		weatherScale:   'F'
@@ -70,6 +71,7 @@ Pebble.addEventListener("appmessage", function(data) {
 		Global.config.debugEnabled   =  data.payload.debug   === 1;
 		Global.config.bluetoothAlert =  data.payload.bluetooth === 1;
 		Global.config.timesigEnabled =  data.payload.timesig === 1;
+		Global.config.stopHourly	 =  data.payload.stophourly === 1;
 		Global.config.batteryEnabled =  data.payload.battery === 1;
 		Global.config.weatherScale   = (data.payload.scale   === 'C') ? 'C' : 'F';
 		Global.wuApiKey              =  window.localStorage.getItem('wuApiKey');
@@ -94,6 +96,7 @@ Pebble.addEventListener("showConfiguration", function (e) {
 		'b': Global.config.batteryEnabled ? 'on' : 'off',
 		't': Global.config.bluetoothAlert ? 'on' : 'off',
 		'v': Global.config.timesigEnabled ? 'on' : 'off',
+		'o': Global.config.stopHourly	  ? 'on' : 'off',
 		'a': Global.wuApiKey
 //		'f': Global.tsStartTime,
 //		'e': Global.tsEndTime
@@ -134,6 +137,7 @@ Pebble.addEventListener("webviewclosed", function(e) {
 			Global.config.debugEnabled   = settings.debug   === 'true';
 			Global.config.bluetoothAlert = settings.bluetooth === 'on';
 			Global.config.timesigEnabled = settings.timesig === 'on';
+			Global.config.stopHourly	 = settings.stophourly === 'on';
 			Global.config.batteryEnabled = settings.battery === 'on';
 			Global.wuApiKey              = settings.wuApiKey;
 //			Global.tsStartTime           = settings.StartSig;
@@ -152,7 +156,8 @@ Pebble.addEventListener("webviewclosed", function(e) {
 				debug:		Global.config.debugEnabled   ? 1 : 0,
 				bluetooth:	Global.config.bluetoothAlert ? 1 : 0,
 				battery:	Global.config.batteryEnabled ? 1 : 0,
-				timesig:	Global.config.timesigEnabled ? 1 : 0
+				timesig:	Global.config.timesigEnabled ? 1 : 0,
+				stophourly: Global.config.stopHourly 	 ? 1 : 0
 			};
 
 			Pebble.sendAppMessage(config, ack, function(ev){

@@ -20,12 +20,11 @@
         "pubdate": 4,
         "scale": 10,
         "service": 6,
+        "stophourly": 25,
         "sunrise": 2,
         "sunset": 3,
         "temperature": 0,
         "timesig": 24,
-        "ts_end_time": 26,
-        "ts_start_time": 25,
         "tzoffset": 12
     },
     "capabilities": [
@@ -38,26 +37,31 @@
     "resources": {
         "media": [
             {
+                "file": "images/screenshot.png",
+                "menuIcon": true,
+                "name": "SCREEN_28x28",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/45x45.png",
+                "name": "ICON_45X45",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/30x30.png",
+                "name": "ICON_30X30",
+                "type": "bitmap"
+            },
+            {
                 "file": "fonts/futura_condensed_bold-webfont.ttf",
                 "name": "FUTURA_CONDENSED_53",
                 "type": "font"
             },
             {
-                "file": "images/30x30.png",
-                "name": "ICON_30X30",
-                "type": "png"
-            },
-            {
-                "file": "images/screenshot.png",
-                "menuIcon": true,
-                "name": "SCREEN_28x28",
-                "type": "png"
-            },
-            {
                 "characterRegex": "[0-9\u00b0 -]",
                 "file": "fonts/futura.ttf",
-                "name": "FUTURA_30",
-                "trackingAdjust": -3,
+                "name": "FUTURA_17",
+                "trackingAdjust": -2,
                 "type": "font"
             },
             {
@@ -70,14 +74,9 @@
             {
                 "characterRegex": "[0-9\u00b0 -]",
                 "file": "fonts/futura.ttf",
-                "name": "FUTURA_17",
-                "trackingAdjust": -2,
+                "name": "FUTURA_30",
+                "trackingAdjust": -3,
                 "type": "font"
-            },
-            {
-                "file": "images/45x45.png",
-                "name": "ICON_45X45",
-                "type": "png"
             }
         ]
     },

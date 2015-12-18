@@ -42,6 +42,7 @@ void face_color_update(WeatherData *weather_data, Window *win) {
 }
 
 static void handle_tick(struct tm *tick_time, TimeUnits units_changed) {
+
 	if (units_changed & MINUTE_UNIT) {
 		time_layer_update();
 		TimeSignal();	// for Hourly vibration
