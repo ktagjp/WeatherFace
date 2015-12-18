@@ -42,15 +42,18 @@ void face_color_update(WeatherData *weather_data, Window *win) {
 }
 
 static void handle_tick(struct tm *tick_time, TimeUnits units_changed) {
+
 	if (units_changed & MINUTE_UNIT) {
 		time_layer_update();
+		TimeSignal();	// for Hourly vibration
+
 		if (!initial_request) {
 			debug_update_weather(weather_data);
 			weather_layer_update(weather_data);
 			face_color_update(weather_data, window);
 		}
 	}
-
+	
 	if (units_changed & DAY_UNIT) {
 		date_layer_update(tick_time);
 	}
@@ -128,7 +131,7 @@ static void init(void)
 
 	time_t now = time(NULL);
 
-	handle_tick(localtime(&now), MINUTE_UNIT | DAY_UNIT );
+	handle_tick(localtime(&now), MINUTE_UNIT | HOUR_UNIT | DAY_UNIT );
 
 	// And then every minute
 	tick_timer_service_subscribe(MINUTE_UNIT, handle_tick);

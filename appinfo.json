@@ -20,9 +20,11 @@
         "pubdate": 4,
         "scale": 10,
         "service": 6,
+        "stophourly": 25,
         "sunrise": 2,
         "sunset": 3,
         "temperature": 0,
+        "timesig": 24,
         "tzoffset": 12
     },
     "capabilities": [
@@ -36,6 +38,7 @@
         "media": [
             {
 <<<<<<< HEAD
+<<<<<<< HEAD
                 "file": "fonts/futura_condensed_bold-webfont.ttf",
                 "name": "FUTURA_CONDENSED_53",
                 "type": "font"
@@ -44,13 +47,25 @@
                 "name": "ICON_30X30",
                 "type": "png"
 >>>>>>> b72e236a610b1faa1e8e7c181b6d2f2ce14fe75c
+=======
+                "file": "images/screenshot.png",
+                "menuIcon": true,
+                "name": "SCREEN_28x28",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/45x45.png",
+                "name": "ICON_45X45",
+                "type": "bitmap"
+>>>>>>> develop2
             },
             {
                 "file": "images/30x30.png",
                 "name": "ICON_30X30",
-                "type": "png"
+                "type": "bitmap"
             },
             {
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
                 "file": "fonts/futura_condensed_bold-webfont.ttf",
@@ -63,6 +78,11 @@
                 "menuIcon": true,
                 "name": "SCREEN_28x28",
                 "type": "png"
+=======
+                "file": "fonts/futura_condensed_bold-webfont.ttf",
+                "name": "FUTURA_CONDENSED_53",
+                "type": "font"
+>>>>>>> develop2
             },
             {
                 "characterRegex": "[0-9\u00b0 -]",
@@ -82,6 +102,7 @@
                 "characterRegex": "[0-9\u00b0 -]",
                 "file": "fonts/futura.ttf",
 <<<<<<< HEAD
+<<<<<<< HEAD
                 "name": "FUTURA_17",
                 "trackingAdjust": -2,
                 "type": "font"
@@ -95,6 +116,11 @@
                 "trackingAdjust": -3,
                 "type": "font"
 >>>>>>> b72e236a610b1faa1e8e7c181b6d2f2ce14fe75c
+=======
+                "name": "FUTURA_30",
+                "trackingAdjust": -3,
+                "type": "font"
+>>>>>>> develop2
             }
         ]
     },
