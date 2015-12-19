@@ -37,10 +37,12 @@
     "resources": {
         "media": [
             {
-                "file": "images/pebble-screenshot-init-view.png",
-                "menuIcon": true,
+                "file": "images/pebble-screenshot1.png",
                 "name": "SCREEN_28x28",
-                "type": "bitmap"
+                "targetPlatforms": [
+                    "basalt"
+                ],
+                "type": "png"
             },
             {
                 "file": "images/45x45.png",
@@ -60,8 +62,8 @@
             {
                 "characterRegex": "[0-9\u00b0 -]",
                 "file": "fonts/futura.ttf",
-                "name": "FUTURA_17",
-                "trackingAdjust": -2,
+                "name": "FUTURA_30",
+                "trackingAdjust": -3,
                 "type": "font"
             },
             {
@@ -74,8 +76,8 @@
             {
                 "characterRegex": "[0-9\u00b0 -]",
                 "file": "fonts/futura.ttf",
-                "name": "FUTURA_30",
-                "trackingAdjust": -3,
+                "name": "FUTURA_17",
+                "trackingAdjust": -2,
                 "type": "font"
             }
         ]
