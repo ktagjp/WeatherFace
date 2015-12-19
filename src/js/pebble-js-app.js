@@ -5,17 +5,8 @@ var COLOR_DUKEBLUE			= "duke";
 var COLOR_BLACK				= "black";
 var COLOR_RED				= "red";		///// Add Background Color value
 var EXTERNAL_DEBUG_URL    = '';
-<<<<<<< HEAD
-<<<<<<< HEAD
-var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone.html';		//////// Config URL for PHONE //////
-// var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/emulator.html';	//////// Config URL for EMULATOR //////
-=======
-var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/';    //////// Change URL to my Github page //////
->>>>>>> b72e236a610b1faa1e8e7c181b6d2f2ce14fe75c
-=======
 // var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/phone20151218.html';		//////// Config URL for PHONE //////
 var CONFIGURATION_URL     = 'http://ktagjp.github.io/WeatherFace/config/emulator20151218.html';	//////// Config URL for EMULATOR //////
->>>>>>> develop2
 
 var Global = {
 	externalDebug:     false, // POST logs to external server - dangerous! lat lon recorded

@@ -37,7 +37,7 @@
     "resources": {
         "media": [
             {
-                "file": "images/screenshot.png",
+                "file": "images/pebble-screenshot-init-view.png",
                 "menuIcon": true,
                 "name": "SCREEN_28x28",
                 "type": "bitmap"
